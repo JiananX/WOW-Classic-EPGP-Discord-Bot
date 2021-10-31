@@ -121,23 +121,68 @@ async def adjust(message):
   else:
     await message.author.send('请指定游戏ID');
 
-async def sync_epgp_from_gsheet(message):
-  epgp_from_gsheet = gsheet.sync_epgp_from_gsheet()
-  with open ('epgp.txt', 'w') as outfile:
-    json.dump(epgp_from_gsheet, outfile)
+async def sync_epgp_from_gsheet_to_json(message):
+  epgp_from_gsheet = gsheet.get_epgp_from_gsheet()
   df = pd.DataFrame.from_dict(epgp_from_gsheet);
+  raiders = [];
   for index, row in df.iterrows():
-    raider_dict[row['ID']] = raider.Raider(row['ID'], row['EP'], row['GP'], False);
-    print(raider_dict[row['ID']])
-  await message.author.send('从google sheet中导入epgp成功');
+    r = raider.Raider(row['ID'], row['EP'], row['GP'], False)
+    raider_dict[row['ID']] = r
+    print(r)
+    raiders.append(r)
+  jstr = json.dumps([ob.__dict__ for ob in raiders])
+  with open ('epgp.txt', 'w') as outfile:
+    outfile.write(jstr)
+  await message.author.send('从google sheet中导入epgp.txt成功');
 
-async def sync_loot_from_gsheet(message):
-  loot_from_gsheet = gsheet.sync_loot_from_gsheet()
-  with open ('loot.txt', 'w') as outfile:
-    json.dump(loot_from_gsheet, outfile)
+async def sync_loot_from_gsheet_to_json(message):
+  loot_from_gsheet = gsheet.get_loot_from_gsheet()
   df = pd.DataFrame.from_dict(loot_from_gsheet);
+  loots = [];
   for index, row in df.iterrows():
-    loot_dict[row['ID']] = loot.Loot(row['ID'], row['NAME'], row['GP'], False);
-    print(loot_dict[row['ID']])
-  await message.author.send('从google sheet中导入loot成功');
-    
+    l = loot.Loot(row['ID'], row['NAME'], row['GP'], False)
+    loot_dict[row['ID']] = l
+    print(l)
+    loots.append(l)
+  jstr = json.dumps([ob.__dict__ for ob in loots])
+  with open ('loot.txt', 'w') as outfile:
+    outfile.write(jstr)
+  await message.author.send('从google sheet中导入loot.txt成功');
+  
+async def load_epgp_from_json_to_memory(message):
+  with open('epgp.txt', 'r') as infile:
+    json_data = infile.read()   
+  raiders = json.loads(json_data);
+  for index, value in enumerate(raiders):
+    r = raider.Raider(raiders[index]['ID'], raiders[index]['EP'], raiders[index]['GP'], False)
+    raider_dict[raiders[index]['ID']] = r
+    print(raider_dict[raiders[index]['ID']])
+  await message.author.send('从epgp.txt导入成功');
+
+async def load_loot_from_json_to_memory(message):
+  with open('loot.txt', 'r') as infile:
+    json_data = infile.read()   
+  loots = json.loads(json_data);
+  for index, value in enumerate(loots):
+    l = loot.Loot(loots[index]['ID'], loots[index]['NAME'], loots[index]['GP'], False)
+    loot_dict[loots[index]['ID']] = l
+    print(loot_dict[loots[index]['ID']])
+  await message.author.send('从loot.txt导入成功');
+
+async def dump_epgp_from_memory_to_json(message):
+  raiders = [];
+  for value in raider_dict.values():
+    raiders.append(value)
+  jstr = json.dumps([ob.__dict__ for ob in raiders])
+  with open ('epgp.txt', 'w') as outfile:
+    outfile.write(jstr)
+  await message.author.send('写入epgp.txt成功');
+
+async def dump_loot_from_memory_to_json(message):
+  loots = [];
+  for value in loot_dict.values():
+    loots.append(value)
+  jstr = json.dumps([ob.__dict__ for ob in loots])
+  with open ('loot.txt', 'w') as outfile:
+    outfile.write(jstr)
+  await message.author.send('写入loot.txt成功');

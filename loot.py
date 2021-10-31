@@ -1,9 +1,9 @@
 class Loot:
-  def __init__(self, id, name, gp, is_bis):
-    self.id = id
-    self.name = name
-    self.gp = gp
-    self.is_bis = False
+  def __init__(self, ID, NAME, GP, BIS):
+    self.ID = ID
+    self.NAME = NAME
+    self.GP = GP
+    self.BIS = False
 
   def __str__(self):
-    return  f'{self.name}  gp: {self.gp} bis: {self.is_bis}';
+    return  f'{self.NAME}  GP: {self.GP} bis: {self.BIS}';
