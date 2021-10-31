@@ -24,6 +24,13 @@ raid_op_reg = "(Raid|r) .+";
 admin_reg = "(Admin|a) .+";
 dis_reg = "(Distribute|d) .+";
 
+# user.py
+raid_pr_list_id = "user_raid_pr_list";
+my_pr_id = "user_my_pr";
+main_spec_id = 'main_spec'
+
+
 # common constant
 initial_gp = 1000;
 decay_factor = 0.85;
+update_message_button_response_type = 7;

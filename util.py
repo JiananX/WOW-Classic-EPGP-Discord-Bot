@@ -1,6 +1,7 @@
-from replit import db
+from replit import db;
 
-import constant
+import constant;
+import logging;
 
 def is_valid_game_id(game_id):
   return (db.get('%s_ep'%(game_id)) != None) & (db.get('%s_gp'%(game_id)) != None);
@@ -41,3 +42,17 @@ def generate_pr_list(pr_list, ep_list, gp_list):
     pr_message += '%s  %s  %s  %s\n'%(game_id, ep_list[game_id], gp_list[game_id], entry[1]);
   
   return pr_message;
+
+def start_logger():
+  formatter = logging.Formatter('%(asctime)s %(message)s');
+  fh = logging.FileHandler('testing.log');
+  fh.setLevel(level=logging.INFO);
+  fh.setFormatter(formatter);
+
+  logger = logging.getLogger('EPGP');
+  logger.addHandler(fh);
+  fh.setLevel(level=logging.INFO);
+
+def log_msg(msg):
+  logger = logging.getLogger('EPGP');
+  logger.info(msg);

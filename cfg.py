@@ -15,3 +15,6 @@ global current_winner;
 global item_gp;
 # Bool
 is_distributing = False;
+
+#### 用户相关
+global raid_user_msg;
