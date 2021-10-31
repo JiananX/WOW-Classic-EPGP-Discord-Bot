@@ -1,6 +1,6 @@
 from replit import db
 
-import cfg;
+import cfg
 import constant
 import re
 import util
@@ -9,117 +9,104 @@ import pandas as pd
 import json
 import raider
 import loot
+import view
+import time
 
 import logging
 
 raider_dict = {}
 loot_dict = {}
 
+
 async def start_new_raid(message):
-  logger=logging.getLogger('EPGP');
-  if (cfg.admin != None):
-    await message.channel.send('%s已经开始本次Raid，请稍后再试'%(cfg.admin));
-  else:
-    cfg.admin = message.author;
-    await message.channel.send('%s开始本次Raid'%(cfg.admin));
-    logger.warning("start");
+    logger = logging.getLogger('EPGP')
+    if (cfg.admin != None):
+        await message.channel.send('%s已经开始本次Raid，请稍后再试' % (cfg.admin))
+    else:
+        cfg.admin = message.author
+        cfg.stamp = str(time.time())
+        cfg.admin_loot_message = await message.channel.send(
+            '%s开始本次Raid' % (cfg.admin),
+            embed=view.loot_admin_embed(),
+            components=view.loot_admin_view_component(False, False))
+        logger.warning("start")
 
-async def add_new_member(message):  
-  game_id_match = re.findall("-id ([^ ]+)", message.content, re.IGNORECASE);
-  
-  if (len(game_id_match) == 1):
-    game_id = game_id_match[0];
 
-    if (util.is_valid_game_id(game_id) == True):
-      await message.author.send('当前游戏ID已经存在于DB');
-      return;
+async def add_new_member(message):
+    game_id_match = re.findall("-id ([^ ]+)", message.content, re.IGNORECASE)
 
-    ep_match = re.findall("-ep ([0-9]+)", message.content, re.IGNORECASE);
-    gp_match = re.findall("-gp ([0-9]+)", message.content, re.IGNORECASE);
-    ep = 0;
-    gp = constant.initial_gp;
-    if (len(ep_match) == 1):
-      ep = int(ep_match[0]);
-    if (len(gp_match) == 1):
-      gp = int(gp_match[0]);
+    if (len(game_id_match) == 1):
+        game_id = game_id_match[0]
 
-    util.set_ep(game_id, ep);
-    util.set_gp(game_id, gp);
-    await message.author.send('加入成功 ID: %s EP: %s, GP: %s'%(game_id, util.get_ep(game_id), util.get_gp(game_id)));
-  else:
-    await message.author.send('请指定新的游戏ID');
+        if (util.is_valid_game_id(game_id) == True):
+            await message.author.send('当前游戏ID已经存在于DB')
+            return
 
-async def all_pr_list(message):
-  raiders = '';
-  for value in raider_dict.values():
-    raiders += str(value) + '\n';
-  if raiders == '':
-    await message.author.send('请先运行(Admin|a) pull PR')
-  else:
-    await message.author.send(raiders)
+        ep_match = re.findall("-ep ([0-9]+)", message.content, re.IGNORECASE)
+        gp_match = re.findall("-gp ([0-9]+)", message.content, re.IGNORECASE)
+        ep = 0
+        gp = constant.initial_gp
+        if (len(ep_match) == 1):
+            ep = int(ep_match[0])
+        if (len(gp_match) == 1):
+            gp = int(gp_match[0])
 
-async def all_pr_list_from_db(message):
-  db_keys = db.keys();
-  game_id_list = [];
+        util.set_ep(game_id, ep)
+        util.set_gp(game_id, gp)
+        await message.author.send(
+            '加入成功 ID: %s EP: %s, GP: %s' %
+            (game_id, util.get_ep(game_id), util.get_gp(game_id)))
+    else:
+        await message.author.send('请指定新的游戏ID')
 
-  for db_key in db_keys:
-    match = re.fullmatch("([^ ]+)\_ep", db_key);
-    if (match):
-      game_id = match[1];
-      if (util.is_valid_game_id(game_id)):
-        game_id_list.append(game_id);
-      
-  pr_list = {};
-  ep_list = {};
-  gp_list = {};
-  for game_id in game_id_list:
-    ep_list.update({game_id: util.get_ep(game_id)});
-    gp_list.update({game_id: util.get_gp(game_id)});
-    pr_list.update({game_id: util.calculate_pr(game_id)});
-
-  await message.channel.send(util.generate_pr_list(pr_list, ep_list, gp_list));
 
 async def decay(message):
-  db_keys = db.keys();
-  game_id_list = [];
+    db_keys = db.keys()
+    game_id_list = []
 
-  for db_key in db_keys:
-    match = re.fullmatch("([^ ]+)\_ep", db_key);
-    if (match):
-      game_id = match[1];
-      if (util.is_valid_game_id(game_id)):
-        game_id_list.append(game_id);
+    for db_key in db_keys:
+        match = re.fullmatch("([^ ]+)\_ep", db_key)
+        if (match):
+            game_id = match[1]
+            if (util.is_valid_game_id(game_id)):
+                game_id_list.append(game_id)
 
-  for game_id in game_id_list:
-    util.set_ep(game_id, int(util.get_ep(game_id) * constant.decay_factor));
-    util.set_gp(game_id, int(util.get_gp(game_id) * constant.decay_factor));
+    for game_id in game_id_list:
+        util.set_ep(game_id, int(util.get_ep(game_id) * constant.decay_factor))
+        util.set_gp(game_id, int(util.get_gp(game_id) * constant.decay_factor))
 
-  await message.channel.send("Deacy 成功，系数为%s"%(constant.decay_factor));
+    await message.channel.send("Deacy 成功，系数为%s" % (constant.decay_factor))
 
-async def adjust(message):  
-  game_id_match = re.findall("-id ([^ ]+)", message.content, re.IGNORECASE);
-  
-  if (len(game_id_match) == 1):
-    game_id = game_id_match[0];
 
-    if (util.is_valid_game_id(game_id) == False):
-      await message.author.send('当前游戏ID不存在');
-      return;
+async def adjust(message):
+    game_id_match = re.findall("-id ([^ ]+)", message.content, re.IGNORECASE)
 
-    ep_match = re.findall("-ep ([+-]?[0-9]+)", message.content, re.IGNORECASE);
-    gp_match = re.findall("-gp ([+-]?[0-9]+)", message.content, re.IGNORECASE);
-    ep = 0;
-    gp = 0;
-    if (len(ep_match) == 1):
-      ep = int(ep_match[0]);
-    if (len(gp_match) == 1):
-      gp = int(gp_match[0]);
+    if (len(game_id_match) == 1):
+        game_id = game_id_match[0]
 
-    util.set_ep(game_id, util.get_ep(game_id) + ep);
-    util.set_gp(game_id, util.get_gp(game_id) + gp);
-    await message.author.send('调整成功 ID: %s EP: %s, GP: %s'%(game_id, util.get_ep(game_id), util.get_gp(game_id)));
-  else:
-    await message.author.send('请指定游戏ID');
+        if (util.is_valid_game_id(game_id) == False):
+            await message.author.send('当前游戏ID不存在')
+            return
+
+        ep_match = re.findall("-ep ([+-]?[0-9]+)", message.content,
+                              re.IGNORECASE)
+        gp_match = re.findall("-gp ([+-]?[0-9]+)", message.content,
+                              re.IGNORECASE)
+        ep = 0
+        gp = 0
+        if (len(ep_match) == 1):
+            ep = int(ep_match[0])
+        if (len(gp_match) == 1):
+            gp = int(gp_match[0])
+
+        util.set_ep(game_id, util.get_ep(game_id) + ep)
+        util.set_gp(game_id, util.get_gp(game_id) + gp)
+        await message.author.send(
+            '调整成功 ID: %s EP: %s, GP: %s' %
+            (game_id, util.get_ep(game_id), util.get_gp(game_id)))
+    else:
+        await message.author.send('请指定游戏ID')
+
 
 async def sync_epgp_from_gsheet_to_json(message):
   epgp_from_gsheet = gsheet.get_epgp_from_gsheet()

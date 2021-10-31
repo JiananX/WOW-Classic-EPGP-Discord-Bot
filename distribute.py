@@ -4,123 +4,114 @@ import admin
 import asyncio
 import cfg
 import re
+import view
+import util
+
+'''
+Command
+'''
+
 
 async def announcement(message):
-  if (cfg.is_distributing == True):
-    await cfg.admin.send('Last item still in progress, please cancel or confirm');
-    return;
+    if (cfg.is_distributing == True):
+        await cfg.admin.send(
+            'Last item still in progress, please cancel or confirm')
+        return
 
-  cfg.is_distributing = True;
-  cfg.current_item = message.content.split(" ")[1];
-  cfg.item_gp = int(message.content.split(" ")[2]);
-  cfg.main_spec = {};
+    loot_id = message.content.split(" ")[1]
 
-  for author in cfg.raid_roster.keys():
-    await author.send('%s %s \n Reply 1 for main spec'%(cfg.current_item, cfg.item_gp));
+    if (admin.loot_dict.get(loot_id) == None):
+        await cfg.admin.send('Invalid loot')
+        return
 
-  await asyncio.sleep(30);
-  await _calculate_result(); 
+    cfg.is_distributing = True
+    cfg.current_loot = admin.loot_dict[loot_id]
+    cfg.main_spec = {}
 
-async def cancel(message):
-  if (cfg.is_distributing == False):
-    await message.author.send('现在没有正在分配物品');
-    return;
+    for msg in cfg.raid_user_msg.values():
+        await msg.edit(embed=view.my_pr_embed(message.author),
+                       components=view.user_view_component(True))
+    await cfg.admin_loot_message.edit(embed=view.loot_admin_embed())
+    await asyncio.sleep(30)
+    await _calculate_result()
 
-  if (cfg.current_winner == None):
-    await message.author.send('当前物品还未结算完毕');
-    return;
 
-  _reset();
-  for author in cfg.raid_roster.keys():
-    await author.send('本次Loot已经取消');
+'''
+Message Interaction
+'''
+async def cancel():
+    await _reset()
 
-async def confirm(message):
-  # TODO: 更严格的match
-  if (cfg.is_distributing == False):
-    await message.author.send('现在没有正在分配物品');
-    return;
 
-  if (cfg.current_winner == None):
-    await message.author.send('当前物品还未结算完毕');
-    return;
+async def confirm(factor):
+    winner_id = cfg.raid_roster[cfg.current_winner]
+    util.set_gp(winner_id, int(cfg.current_loot.gp * factor)+util.get_gp(winner_id));
 
-  game_id_match = re.findall("-id ([^ ]+)", message.content, re.IGNORECASE);
-  
-  if (len(game_id_match) == 1):
-    game_id = game_id_match[0];
+    await _reset()
 
-    if (game_id not in cfg.raid_roster.values()):
-      await message.author.send('当前Raid无法找到%s'%(game_id));
-      return;
-    
-    cfg.current_winner = list(cfg.raid_roster.keys())[list(cfg.raid_roster.values()).index(game_id)];
 
-  if (cfg.current_winner == '无人'):
-    await message.author.send('无法分配流拍物品，请取消 或者指定分配人');
-    return;
+'''
+Util
+'''
 
-  final_gp = cfg.item_gp;
-  gp_percent = re.findall("-percent ([0-9]+)", message.content, re.IGNORECASE);
-  
-  if (len(gp_percent) == 1):
-    percent = int(gp_percent[0]);
-
-    if ((percent == 20) | (percent == 50)):
-      final_gp *= float(percent)/100.0;
-      final_gp = int(final_gp);
-    else:
-      await message.author.send('非预设折扣,只能接受20%或者50%');
-      return;
-
-  admin.update_gp(cfg.raid_roster[cfg.current_winner], final_gp);
-
-  for author in cfg.raid_roster.keys():
-    await author.send('本次%s已经分配给%s花费GP%s'%(cfg.current_item, cfg.raid_roster[cfg.current_winner], final_gp));
-
-  await cfg.current_winner.send('消费%s, 总GP%s'%(final_gp, db['%s_gp'%(cfg.raid_roster[cfg.current_winner])]));
-  
-  _reset();
-  
 
 async def _calculate_result():
-  highest_pr = 0;
-  winner = None;
+    for msg in cfg.raid_user_msg.values():
+        await msg.edit(components=view.user_view_component(False))
 
-  main_spec = cfg.main_spec.copy();
-  cfg.main_spec = None;
+    highest_pr = 0
+    winner = None
 
-  for author in main_spec.keys():
-    pr = main_spec[author];
-    if (pr > highest_pr):
-      highest_pr = pr;
-      winner = author;
+    for author in cfg.main_spec.keys():
+        pr = cfg.main_spec[author]
+        if (pr > highest_pr):
+            highest_pr = pr
+            winner = author
 
-  if (winner != None):
-    all_string = '参与者\n';
-    winner_string = '\n获胜者\n';
-    for author in cfg.raid_roster.keys():
-      if (author in main_spec.keys()):
-        all_string += 'id: %s, pr: %s\n'%(cfg.raid_roster[author], main_spec[author]);     
-      if (author == winner):
-        winner_string += 'id: %s, pr: %s'%(cfg.raid_roster[author], main_spec[author]);
+    if (winner != None):
+        all_string = '参与者\n'
+        winner_string = '\n获胜者\n'
+        for author in cfg.raid_roster.keys():
+            if (author in cfg.main_spec.keys()):
+                all_string += 'id: %s, pr: %s\n' % (cfg.raid_roster[author],
+                                                    cfg.main_spec[author])
+            if (author == winner):
+                winner_string += 'id: %s, pr: %s' % (cfg.raid_roster[author],
+                                                     cfg.main_spec[author])
 
-    for author in cfg.raid_roster.keys():
-      await author.send(all_string + winner_string);
+        cfg.loot_message = all_string + winner_string
+        cfg.current_winner = winner
 
-    # Make sure all the message has been sent before set winner, otherwise other operation may happen during the messaging process.
-    cfg.current_winner = winner;
-  else:
-    for author in cfg.raid_roster.keys():
-      await author.send('本次Loot无人GP需求');
+        for user in cfg.raid_user_msg.keys():
+            msg = cfg.raid_user_msg[user]
+            await msg.edit(embed=view.my_pr_embed(user))
 
-    # Make sure all the message has been sent before set winner, otherwise other operation may happen during the messaging process.
-    cfg.current_winner = '无人';
+        await cfg.admin_loot_message.edit(
+            embed=view.loot_admin_embed(),
+            components=view.loot_admin_view_component(True, True))
+    else:
+        cfg.loot_message = '本次Loot无人GP需求'
 
-  await cfg.admin.send('结算完毕 请确认分配或取消');
+        for user in cfg.raid_user_msg.keys():
+            msg = cfg.raid_user_msg[user]
+            await msg.edit(embed=view.my_pr_embed(user))
 
-def _reset():
-  cfg.main_spec = None;
-  cfg.current_item = None;
-  cfg.current_winner = None;
-  cfg.is_distributing = False;
-  cfg.item_gp = None;
+        await cfg.admin_loot_message.edit(
+            embed=view.loot_admin_embed(),
+            components=view.loot_admin_view_component(False, True))
+
+
+async def _reset():
+    cfg.main_spec = None
+    cfg.current_loot = None
+    cfg.current_winner = None
+    cfg.loot_message = None
+    cfg.is_distributing = False
+
+    for user in cfg.raid_user_msg.keys():
+        msg = cfg.raid_user_msg[user]
+        await msg.edit(embed=view.my_pr_embed(user))
+
+    await cfg.admin_loot_message.edit(
+        embed=view.loot_admin_embed(),
+        components=view.loot_admin_view_component(False, False))

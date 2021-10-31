@@ -55,4 +55,4 @@ def start_logger():
 
 def log_msg(msg):
   logger = logging.getLogger('EPGP');
-  logger.info(msg);
+  #logger.info(msg);
