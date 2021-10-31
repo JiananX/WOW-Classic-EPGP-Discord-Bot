@@ -8,10 +8,12 @@ import gsheet
 import pandas as pd
 import json
 import raider
+import loot
 
 import logging
 
 raider_dict = {}
+loot_dict = {}
 
 async def start_new_raid(message):
   logger=logging.getLogger('EPGP');
@@ -126,4 +128,16 @@ async def sync_epgp_from_gsheet(message):
   df = pd.DataFrame.from_dict(epgp_from_gsheet);
   for index, row in df.iterrows():
     raider_dict[row['ID']] = raider.Raider(row['ID'], row['EP'], row['GP'], False);
-  await message.author.send('从google sheet中导入成功');
+    print(raider_dict[row['ID']])
+  await message.author.send('从google sheet中导入epgp成功');
+
+async def sync_loot_from_gsheet(message):
+  loot_from_gsheet = gsheet.sync_loot_from_gsheet()
+  with open ('loot.txt', 'w') as outfile:
+    json.dump(loot_from_gsheet, outfile)
+  df = pd.DataFrame.from_dict(loot_from_gsheet);
+  for index, row in df.iterrows():
+    loot_dict[row['ID']] = loot.Loot(row['ID'], row['NAME'], row['GP'], False);
+    print(loot_dict[row['ID']])
+  await message.author.send('从google sheet中导入loot成功');
+    
