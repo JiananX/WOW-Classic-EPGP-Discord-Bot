@@ -14,7 +14,6 @@ import view
 bot = ComponentsBot('?')
 util.start_logger()
 
-
 @bot.event
 async def on_ready():
     initialize_global_vars()
@@ -111,32 +110,35 @@ async def on_raid_op_message(message):
     Raid|r reward XX [-r 原因] 奖励raid XX EP
     ''')
 
-
 async def on_admin_message(message):
-    if (str(message.author) not in os.environ['admin_token']):
-        await message.channel.send('您不是管理员')
-        return
+  if (str(message.author) not in os.environ['admin_token']):
+      await message.channel.send('您不是管理员')
+      return
 
-    if (match_keywork(constant.start_new_raid_reg, message)):
-        await admin.start_new_raid(message)
-    elif (match_keywork(constant.add_new_member_reg, message)):
-        await admin.add_new_member(message)
-    elif (match_keywork(constant.all_pr_list_reg, message)):
-        await admin.all_pr_list(message)
-    elif (match_keywork(constant.decay_reg, message)):
-        await admin.decay(message)
-    elif (match_keywork(constant.adjust_reg, message)):
-        await admin.adjust(message)
-    else:
-        await message.author.send('''
+  if(match_keywork(constant.start_new_raid_reg, message)):
+    await admin.start_new_raid(message);
+  elif(match_keywork(constant.add_new_member_reg, message)):
+    await admin.add_new_member(message);
+  elif(match_keywork(constant.all_pr_list_reg, message)):
+    await admin.all_pr_list(message);
+  elif(match_keywork(constant.decay_reg, message)):
+    await admin.decay(message);
+  elif(match_keywork(constant.adjust_reg, message)):
+    await admin.adjust(message);
+  elif(match_keywork(constant.sync_epgp_from_gsheet, message)):
+    await admin.sync_epgp_from_gsheet(message); 
+  elif(match_keywork(constant.sync_loot_from_gsheet, message)):
+    await admin.sync_loot_from_gsheet(message);   
+  else:
+    await message.author.send('''
       指令              用途
     Admin|a start      开始raid
     Admin|a pr         DB中所有人的PR信息
-    Admin|a add -id 游戏ID [-ep XX] [-gp XX] 添加新的游戏ID到DB
+    Admin|a add -id    游戏ID [-ep XX] [-gp XX] 添加新的游戏ID到DB
     Admin|a decay      衰减DB中所有的EP/GP
     Admin|a adjust -id 游戏ID [-ep XX] [-gp XX] [-r 原因] 修改游戏ID的EP/GP
-    ''')
-
+    Admin|a pull PR    从Gsheet中导入所有人的PR信息
+    ''');
 
 async def on_distribution_message(message):
     if (str(message.author) not in os.environ['admin_token']):

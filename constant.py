@@ -6,12 +6,14 @@ main_spec_reg = "(Main Spec|1)";
 # admin.py
 start_new_raid_reg = "(Admin|a) start";
 add_new_member_reg = "(Admin|a) add .+";
-all_pr_list_reg = "(Admin|a) PR"
-decay_reg = "(Admind|a) decay"
-adjust_reg = "(Admind|a) adjust .+"
+all_pr_list_reg = "(Admin|a) PR";
+decay_reg = "(Admind|a) decay";
+adjust_reg = "(Admind|a) adjust .+";
+sync_epgp_from_gsheet = "(Admin|a) pull pr";
+sync_loot_from_gsheet = "(Admin|a) pull loot";
 
 # raid.py
-reward_ep = "(Raid|r) Reward [0-9]+($| -r .+)"
+reward_ep = "(Raid|r) Reward [0-9]+($| -r .+)";
 retrive_roster = "(Raid|r) Roster";
 
 # distribute.py
