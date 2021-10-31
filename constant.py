@@ -1,7 +1,7 @@
+import cfg
+
 # user.py
 login_reg = "Login ([^ ]+)";
-raid_pr_list_reg = "Raid PR";
-main_spec_reg = "(Main Spec|1)";
 
 # admin.py
 start_new_raid_reg = "(Admin|a) start";
@@ -26,11 +26,14 @@ raid_op_reg = "(Raid|r) .+";
 admin_reg = "(Admin|a) .+";
 dis_reg = "(Distribute|d) .+";
 
-# user.py
-raid_pr_list_id = "user_raid_pr_list";
-my_pr_id = "user_my_pr";
-main_spec_id = 'main_spec'
 
+user_raid_pr_list_id = "user_raid_pr_list";
+user_my_pr_id = "user_my_pr";
+user_main_spec_id = "user_main_spec"
+
+loot_gbid_confirm_id = "loot_gbid";
+loot_main_spec_confirm_id = "loot_main_spec";
+loot_cancel_id = "loot_cancel";
 
 # common constant
 initial_gp = 1000;

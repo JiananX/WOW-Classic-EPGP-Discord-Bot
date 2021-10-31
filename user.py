@@ -19,7 +19,7 @@ async def member_login(message):
     cfg.raid_roster.update({message.author: game_id})
 
     msg = await message.channel.send('欢迎参加本次Raid %s'%(game_id),
-                               components = view.user_view_component(),
+                               components = view.user_view_component(False),
                                embed = view.my_pr_embed(message.author));
                                    
     cfg.raid_user_msg.update({message.author: msg});
@@ -48,23 +48,6 @@ def my_pr(author):
   return 'EP: %s  GP: %s  PR: %s'%(util.get_ep(game_id), util.get_gp(game_id), util.calculate_pr(game_id));
 
 
-async def main_spec_response(message):
-    if (cfg.raid_roster.get(message.author) == None):
-        await message.channel.send('您还未加入本次Raid')
-        return
-
-    if (cfg.is_distributing == False):
-        await message.channel.send('现在没有正在分配物品')
-        return
-
-    if (cfg.main_spec == None):
-        await message.channel.send('当前物品已经结算完毕')
-        return
-
-    if (message.author in cfg.main_spec.keys()):
-        await message.channel.send('您已经参与本次Loot分配')
-        return
-
+def main_spec_response(author):
     cfg.main_spec.update(
-        {message.author: util.calculate_pr(cfg.raid_roster[message.author])})
-    await message.channel.send('您已经需求%s' % (cfg.current_item))
+        {author: util.calculate_pr(cfg.raid_roster[author])})
