@@ -14,7 +14,7 @@ import logging
 
 formatter = logging.Formatter('%(asctime)s %(message)s');
 fh = logging.FileHandler('testing.log');
-fh.setLevel(level=logging.ERROR);
+fh.setLevel(level=logging.INFO);
 fh.setFormatter(formatter);
 
 logger=logging.getLogger('EPGP');
@@ -101,14 +101,17 @@ async def on_admin_message(message):
     await admin.decay(message);
   elif(match_keywork(constant.adjust_reg, message)):
     await admin.adjust(message);
+  elif(match_keywork(constant.sync_epgp_from_gsheet, message)):
+    await admin.sync_epgp_from_gsheet(message); 
   else:
     await message.author.send('''
       指令              用途
     Admin|a start      开始raid
     Admin|a pr         DB中所有人的PR信息
-    Admin|a add -id 游戏ID [-ep XX] [-gp XX] 添加新的游戏ID到DB
+    Admin|a add -id    游戏ID [-ep XX] [-gp XX] 添加新的游戏ID到DB
     Admin|a decay      衰减DB中所有的EP/GP
     Admin|a adjust -id 游戏ID [-ep XX] [-gp XX] [-r 原因] 修改游戏ID的EP/GP
+    Admin|a pull PR    从Gsheet中导入所有人的PR信息
     ''');
 
 async def on_distribution_message(message):

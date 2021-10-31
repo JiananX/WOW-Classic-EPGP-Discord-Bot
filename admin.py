@@ -4,8 +4,14 @@ import cfg;
 import constant
 import re
 import util
+import gsheet
+import pandas as pd
+import json
+import raider
 
 import logging
+
+raider_dict = {}
 
 async def start_new_raid(message):
   logger=logging.getLogger('EPGP');
@@ -42,6 +48,15 @@ async def add_new_member(message):
     await message.author.send('请指定新的游戏ID');
 
 async def all_pr_list(message):
+  raiders = '';
+  for value in raider_dict.values():
+    raiders += str(value) + '\n';
+  if raiders == '':
+    await message.author.send('请先运行(Admin|a) pull PR')
+  else:
+    await message.author.send(raiders)
+
+async def all_pr_list_from_db(message):
   db_keys = db.keys();
   game_id_list = [];
 
@@ -103,4 +118,12 @@ async def adjust(message):
     await message.author.send('调整成功 ID: %s EP: %s, GP: %s'%(game_id, util.get_ep(game_id), util.get_gp(game_id)));
   else:
     await message.author.send('请指定游戏ID');
-    
+
+async def sync_epgp_from_gsheet(message):
+  epgp_from_gsheet = gsheet.sync_epgp_from_gsheet()
+  with open ('epgp.txt', 'w') as outfile:
+    json.dump(epgp_from_gsheet, outfile)
+  df = pd.DataFrame.from_dict(epgp_from_gsheet);
+  for index, row in df.iterrows():
+    raider_dict[row['ID']] = raider.Raider(row['ID'], row['EP'], row['GP'], False);
+  await message.author.send('从google sheet中导入成功');
