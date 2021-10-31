@@ -6,4 +6,4 @@ class Raider:
     self.in_raid = False
 
   def __str__(self):
-    return f'{self.name} ep: {self.ep} gp: {self.gp}';
+    return f'{self.name}  ep: {self.ep} gp: {self.gp} pr: {round(self.ep/self.gp, 2)}';
