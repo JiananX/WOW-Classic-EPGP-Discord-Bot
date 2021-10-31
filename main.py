@@ -126,9 +126,11 @@ async def on_admin_message(message):
   elif(match_keywork(constant.adjust_reg, message)):
     await admin.adjust(message);
   elif(match_keywork(constant.sync_epgp_from_gsheet, message)):
-    await admin.sync_epgp_from_gsheet(message); 
+    await admin.sync_epgp_from_gsheet(message);
   elif(match_keywork(constant.sync_loot_from_gsheet, message)):
-    await admin.sync_loot_from_gsheet(message);   
+    await admin.sync_loot_from_gsheet(message);
+  elif(match_keywork(constant.sync_epgp_to_gsheet, message)):
+    await admin.sync_epgp_to_gsheet(message);
   else:
     await message.author.send('''
       指令              用途

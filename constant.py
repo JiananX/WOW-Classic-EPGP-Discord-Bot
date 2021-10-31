@@ -11,6 +11,7 @@ decay_reg = "(Admind|a) decay";
 adjust_reg = "(Admind|a) adjust .+";
 sync_epgp_from_gsheet = "(Admin|a) pull pr";
 sync_loot_from_gsheet = "(Admin|a) pull loot";
+sync_epgp_to_gsheet = "(Admin|a) push pr";
 
 # raid.py
 reward_ep = "(Raid|r) Reward [0-9]+($| -r .+)";

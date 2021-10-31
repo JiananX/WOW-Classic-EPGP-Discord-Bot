@@ -140,4 +140,9 @@ async def sync_loot_from_gsheet(message):
     loot_dict[row['ID']] = loot.Loot(row['ID'], row['NAME'], row['GP'], False);
     print(loot_dict[row['ID']])
   await message.author.send('从google sheet中导入loot成功');
+
+async def sync_epgp_to_gsheet(message):
+  df = pd.read_json('epgp.txt')
+  gsheet.sync_epgp_to_gsheet(df.values.tolist())
+  await message.author.send('向google sheet中写入epgp成功');
     
