@@ -13,19 +13,14 @@ client = gspread.authorize(creds)
 # get the instance of the Spreadsheet
 sheet = client.open('CF EPGP')
 
-def sync_epgp_from_gsheet():
+def get_epgp_from_gsheet():
   # get the epgp sheet of the Spreadsheet
   sheet_instance = sheet.get_worksheet(0)
   records_data = sheet_instance.get_all_records()
   return records_data;
 
-def sync_loot_from_gsheet():
+def get_loot_from_gsheet():
   # get the loot sheet of the Spreadsheet
   sheet_instance = sheet.get_worksheet(1)
   records_data = sheet_instance.get_all_records()
   return records_data;
-
-def sync_epgp_to_gsheet(values):
-  # set the epgp sheet of the Spreadsheet
-  sheet_instance = sheet.get_worksheet(0)
-  sheet_instance.insert_rows(values, 2)

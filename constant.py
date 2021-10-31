@@ -9,9 +9,12 @@ add_new_member_reg = "(Admin|a) add .+";
 all_pr_list_reg = "(Admin|a) PR";
 decay_reg = "(Admind|a) decay";
 adjust_reg = "(Admind|a) adjust .+";
-sync_epgp_from_gsheet = "(Admin|a) pull pr";
-sync_loot_from_gsheet = "(Admin|a) pull loot";
-sync_epgp_to_gsheet = "(Admin|a) push pr";
+sync_epgp_from_gsheet_to_json = "(Admin|a) g2js pr";
+sync_loot_from_gsheet_to_json = "(Admin|a) g2js loot";
+load_epgp_from_json_to_memory = "(Admin|a) js2m pr";
+load_loot_from_json_to_memory = "(Admin|a) js2m loot";
+dump_epgp_from_memory_to_json = "(Admin|a) m2js pr";
+dump_loot_from_memory_to_json = "(Admin|a) m2js loot";
 
 # raid.py
 reward_ep = "(Raid|r) Reward [0-9]+($| -r .+)";
