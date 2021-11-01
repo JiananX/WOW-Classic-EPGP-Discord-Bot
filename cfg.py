@@ -1,22 +1,13 @@
 '''管理相关'''
-# Author
-global admin;
-global stamp;
-# {Author: Game_id}
-global raid_roster;
-
+global admin
+global stamp
+global raider_dict
+global loot_dict
 '''分配相关'''
-# {Author: PR}
-global main_spec;
-# String
-global current_loot;
-# Author / '无人'
-global current_winner;
-# Bool
-is_distributing = False;
-global loot_message;
-global admin_loot_message;
-
-'''用户相关'''
-global raid_user_msg;
-global raid_user_main_spec_button;
+global main_spec
+global current_loot
+global current_winner
+global loot_message
+'''Global Message Object'''
+global raid_user_msg
+global admin_msg
