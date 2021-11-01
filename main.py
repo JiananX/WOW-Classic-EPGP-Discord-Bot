@@ -10,11 +10,18 @@ import re
 import user
 import util
 import view
+import json
 
 bot = ComponentsBot('?')
 util.start_logger()
 
-
+admin_tokens = [];
+discord_token = None;
+with open('local_settings.json') as infile:
+      data = json.load(infile)
+      admin_tokens.append(data['admin_token'])
+      discord_token = data['discord_token']
+      
 @bot.event
 async def on_ready():
     initialize_global_vars()
@@ -135,11 +142,10 @@ async def on_admin_message(message):
       Admin|a g2js loot  Gsheet中导入所有loot信息到loot.txt文件
       Admin|a js2m pr    epgp.txt导入epgp对象
       Admin|a js2m loot  loot.txt导入loot对象
-      Admin|a m2js pr    epgp对象导入epgp.txt
+      Admin|a (write|w)  epgp对象导入epgp.txt
       Admin|a m2js loot  loot对象导入loot.txt
       ''')
-
-
+        
 async def on_distribution_message(message):
     if (str(message.author) not in constant.admin_token):
         await message.channel.send('您不是管理员')
@@ -206,4 +212,4 @@ def initialize_global_vars():
     cfg.admin_msg = None
 
 
-bot.run(constant.discord_token)
+bot.run(discord_token)

@@ -66,6 +66,7 @@ async def dump_epgp_from_memory_to_json(message):
         'ID': ob.ID,
         'EP': ob.EP,
         'GP': ob.GP,
+        'PR': round(ob.EP/ob.GP, 3),
         'in_raid': ob.in_raid,
         'stand_by': ob.stand_by,
         'author': str(ob.author),
