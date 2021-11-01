@@ -26,7 +26,7 @@
 
 <body>
     <div class="container">
-        <div class="card border-0 shadow my-5" style="background-color: rgba(0, 0, 0, 0.7); ">
+        <div class="card border-0 shadow my-5 " style="background-color: rgba(0, 0, 0, 0.7); ">
             <div style="padding:2%">
                 <h1 class="text text-center text-white">
                     CF Senior EPGP
@@ -35,31 +35,7 @@
                     <a href="index.html">团员名单</a> -- <a href="loot.html">装备GP列表</a> -- <a
                         href="history.html">查看EPGP历史</a>
                 </h3>
-                <table class="table-striped border-success text-light table-hover">
-                    <thead>
-                        <tr>
-                            <th data-field="ID" data-sortable="true">
-                                <span>
-                                    游戏ID
-                                </span>
-                            </th>
-                            <th data-field="EP" data-sortable="true">
-                                <span>
-                                    EP
-                                </span>
-                            </th>
-                            <th data-field="GP" data-sortable="true">
-                                <span>
-                                    GP
-                                </span>
-                            </th>
-                            <th data-field="PR" data-sorter="dateSorter">
-                                <span>
-                                    PR
-                                </span>
-                            </th>
-                        </tr>
-                    </thead>
+                <table class="table-striped border-success text-light table-hover" id="tablediv">
                 </table>
             </div>
         </div>
@@ -85,10 +61,19 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $.getJSON("./epgp.txt", function (epgp_data) {
-                $('table').bootstrapTable({
-                    data: epgp_data
+            var tableContent = '';
+            $.get('../CF_Senior_EPGP.log', function (data) {
+                //this will split the string into array line by line
+                var lineByline = data.split('\n');
+                //here we're itraing the array which you've created and printing the values
+                $.each(lineByline, function (key, value) {
+                    tableContent += '<thead>';
+                    tableContent += '<tr>';
+                    tableContent += '<th>' + value + '</th>';
+                    tableContent += '</tr>';
+                    tableContent += '</thead>';
                 });
+                $('#tablediv').html(tableContent);
             });
         });
     </script>
