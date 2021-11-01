@@ -1,15 +1,16 @@
 ## How to run:
 
+First copy settings.py to local_settings.json and fill in admin_token and discord_token. 
+
+Install dependency and run:
 ```bash
-$ python3 -m venv env
-$ source env/bin/activate
-$ pip3 install -r requirements.txt
+$ source buildstart.sh
 ```
 If there is any error in pip3 install, try updating pip3 first.
-Then copy settings.py to local_settings.json and fill in admin_token and discord_token.
 
+Run without updating dependency:
 ```bash
-$ python3 main.py
+$ source start.sh
 ```
 
 To install new library:
