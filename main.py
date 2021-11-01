@@ -10,11 +10,18 @@ import re
 import user
 import util
 import view
+import json
 
 bot = ComponentsBot('?')
 util.start_logger()
 
-
+admin_tokens = [];
+discord_token = None;
+with open('local_settings.json') as infile:
+      data = json.load(infile)
+      admin_tokens.append(data['admin_token'])
+      discord_token = data['discord_token']
+      
 @bot.event
 async def on_ready():
     initialize_global_vars()
@@ -122,46 +129,46 @@ async def on_raid_op_message(message):
 
 
 async def on_admin_message(message):
-    if (str(message.author) not in os.environ['admin_token']):
+    if (str(message.author) not in admin_tokens):
         await message.channel.send('您不是管理员')
         return
 
-  if(match_keywork(constant.start_new_raid_reg, message)):
-    await admin.start_new_raid(message);
-  elif(match_keywork(constant.add_new_member_reg, message)):
-    await admin.add_new_member(message);
-  elif(match_keywork(constant.all_pr_list_reg, message)):
-    await admin.all_pr_list(message);
-  elif(match_keywork(constant.decay_reg, message)):
-    await admin.decay(message);
-  elif(match_keywork(constant.adjust_reg, message)):
-    await admin.adjust(message);
-  elif(match_keywork(constant.sync_epgp_from_gsheet_to_json, message)):
-    await admin.sync_epgp_from_gsheet_to_json(message);
-  elif(match_keywork(constant.sync_loot_from_gsheet_to_json, message)):
-    await admin.sync_loot_from_gsheet_to_json(message);
-  elif(match_keywork(constant.load_epgp_from_json_to_memory, message)):
-    await admin.load_epgp_from_json_to_memory(message);
-  elif(match_keywork(constant.load_loot_from_json_to_memory, message)):
-    await admin.load_loot_from_json_to_memory(message);
-  elif(match_keywork(constant.dump_epgp_from_memory_to_json, message)):
-    await admin.dump_epgp_from_memory_to_json(message);
-  elif(match_keywork(constant.dump_loot_from_memory_to_json, message)):
-    await admin.dump_loot_from_memory_to_json(message);
-  else:
-    await message.author.send('''
-      指令              用途
-    Admin|a start      开始raid
-    Admin|a add -id    游戏ID [-ep XX] [-gp XX] 添加新的游戏ID到DB
-    Admin|a decay      衰减DB中所有的EP/GP
-    Admin|a adjust -id 游戏ID [-ep XX] [-gp XX] [-r 原因] 修改游戏ID的EP/GP
-    Admin|a g2js pr    Gsheet中导入所有人的pr信息到epgp.txt文件
-    Admin|a g2js loot  Gsheet中导入所有loot信息到loot.txt文件
-    Admin|a js2m pr    epgp.txt导入epgp对象
-    Admin|a js2m loot  loot.txt导入loot对象
-    Admin|a m2js pr    epgp对象导入epgp.txt
-    Admin|a m2js loot  loot对象导入loot.txt
-    ''');
+    if(match_keywork(constant.start_new_raid_reg, message)):
+      await admin.start_new_raid(message);
+    elif(match_keywork(constant.add_new_member_reg, message)):
+      await admin.add_new_member(message);
+    elif(match_keywork(constant.all_pr_list_reg, message)):
+      await admin.all_pr_list(message);
+    elif(match_keywork(constant.decay_reg, message)):
+      await admin.decay(message);
+    elif(match_keywork(constant.adjust_reg, message)):
+      await admin.adjust(message);
+    elif(match_keywork(constant.sync_epgp_from_gsheet_to_json, message)):
+      await admin.sync_epgp_from_gsheet_to_json(message);
+    elif(match_keywork(constant.sync_loot_from_gsheet_to_json, message)):
+      await admin.sync_loot_from_gsheet_to_json(message);
+    elif(match_keywork(constant.load_epgp_from_json_to_memory, message)):
+      await admin.load_epgp_from_json_to_memory(message);
+    elif(match_keywork(constant.load_loot_from_json_to_memory, message)):
+      await admin.load_loot_from_json_to_memory(message);
+    elif(match_keywork(constant.dump_epgp_from_memory_to_json, message)):
+      await admin.dump_epgp_from_memory_to_json(message);
+    elif(match_keywork(constant.dump_loot_from_memory_to_json, message)):
+      await admin.dump_loot_from_memory_to_json(message);
+    else:
+      await message.author.send('''
+        指令              用途
+      Admin|a start      开始raid
+      Admin|a add -id    游戏ID [-ep XX] [-gp XX] 添加新的游戏ID到DB
+      Admin|a decay      衰减DB中所有的EP/GP
+      Admin|a adjust -id 游戏ID [-ep XX] [-gp XX] [-r 原因] 修改游戏ID的EP/GP
+      Admin|a g2js pr    Gsheet中导入所有人的pr信息到epgp.txt文件
+      Admin|a g2js loot  Gsheet中导入所有loot信息到loot.txt文件
+      Admin|a js2m pr    epgp.txt导入epgp对象
+      Admin|a js2m loot  loot.txt导入loot对象
+      Admin|a m2js pr    epgp对象导入epgp.txt
+      Admin|a m2js loot  loot对象导入loot.txt
+      ''');
 
 async def on_distribution_message(message):
     if (str(message.author) not in os.environ['admin_token']):
@@ -217,4 +224,4 @@ def initialize_global_vars():
     cfg.raid_user_main_spec_button = {}
 
 
-bot.run(os.environ['discord_token'])
+bot.run(discord_token)
