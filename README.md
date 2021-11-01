@@ -8,7 +8,7 @@ $ source buildstart.sh
 ```
 If there is any error in pip3 install, try updating pip3 first.
 
-Run without updating dependency:
+After the first dependency installation, next time simply:
 ```bash
 $ source start.sh
 ```
