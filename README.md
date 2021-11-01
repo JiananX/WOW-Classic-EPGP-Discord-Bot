@@ -2,13 +2,13 @@
 
 First copy settings.py to local_settings.json and fill in admin_token and discord_token. 
 
-Install dependency and run:
+Run this cmd for install dependency and run:
 ```bash
 $ source buildstart.sh
 ```
 If there is any error in pip3 install, try updating pip3 first.
 
-After the first dependency installation, next time simply:
+If there is no dependency update, just run:
 ```bash
 $ source start.sh
 ```
