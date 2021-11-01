@@ -24,3 +24,4 @@ $ deactivate
 Coming feature
 1. Loot count down
 2. Integrate Bid function
+3. Alt management
