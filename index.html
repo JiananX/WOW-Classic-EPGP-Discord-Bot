@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" 
+        content="width=device-width,
+                 initial-scale=1,
+                 shrink-to-fit=no">
+  <title>
+    CF Senior EPGP
+  </title>
+  
+  <!-- Include Bootstrap for styling -->
+  <link rel="stylesheet"
+        href=
+"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  
+  <!-- Include the Bootstrap Table CSS
+  for the table -->
+  <link rel="stylesheet" 
+        href=
+"https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="text text-success text-center ">
+      CF Senior EPGP
+    </h1>
+    <h6 class="text text-success text-center">
+      团员名单
+    </h6>
+      <table class="table-striped border-success">
+        <thead>
+          <tr>
+            <th data-field="ID" data-sortable="true">
+              <span class="text-success">
+                游戏ID
+              </span>
+            </th>
+            <th data-field="EP" data-sortable="true">
+              <span class="text-success">
+                EP
+              </span>
+            </th>
+            <th data-field="GP" data-sortable="true">
+              <span class="text-success">
+                GP 
+              </span>
+            </th>
+            <th data-field="PR" data-sorter="dateSorter">
+                <span class="text-success">
+                  PR 
+                </span>
+              </th>
+          </tr>
+        </thead>
+      </table>
+  </div>
+
+    <script>
+    function dateSorter(a, b){
+        return(Data.parse(a) - Data.parse(b));
+    }
+    </script>
+  <!-- Include jQuery and other required
+  files for Bootstrap -->
+  <script src=
+"https://code.jquery.com/jquery-3.3.1.min.js">
+  </script>
+  <script src=
+"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js">
+  </script>
+  <script src=
+"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js">
+  </script>
+  
+  <!-- Include the JavaScript file
+  for Bootstrap table -->
+  <script src=
+"https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js">
+  </script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+        $.getJSON( "./epgp.txt", function( epgp_data ) {
+            $('table').bootstrapTable({
+                data: epgp_data
+            });
+        });
+    });
+  </script>
+</body>
+</html>
