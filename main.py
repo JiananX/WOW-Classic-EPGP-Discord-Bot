@@ -142,7 +142,7 @@ async def on_admin_message(message):
       Admin|a g2js loot  Gsheet中导入所有loot信息到loot.txt文件
       Admin|a js2m pr    epgp.txt导入epgp对象
       Admin|a js2m loot  loot.txt导入loot对象
-      Admin|a m2js pr    epgp对象导入epgp.txt
+      Admin|a (write|w)  epgp对象导入epgp.txt
       Admin|a m2js loot  loot对象导入loot.txt
       ''')
         
