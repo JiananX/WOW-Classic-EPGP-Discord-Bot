@@ -40,4 +40,3 @@ decay_factor = 0.85
 update_message_button_response_type = 7
 ''' TODO: Hide these token '''
 admin_token = 'Angulardart/Ditt#8629, Airbkb/Bigblackbang#0025'
-discord_token = 'OTAzMzgxMDMyNTEyOTI5ODAz.YXsJJg.n7GqtRyKzk0qM67WLnwbQS3-zSc'
