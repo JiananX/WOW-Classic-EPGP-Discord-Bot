@@ -27,14 +27,14 @@ def main_spec_button(enable_loot_button):
 
 
 def gbid_confirm_button(enabled):
-    return Button(label="20% reward",
+    return Button(label="20% GP",
                   custom_id=constant.loot_gbid_confirm_id + cfg.stamp,
                   style=ButtonStyle.blue,
                   disabled=(enabled == False))
 
 
 def main_spec_confirm_button(enabled):
-    return Button(label="100% reward",
+    return Button(label="100% GP",
                   custom_id=constant.loot_main_spec_confirm_id + cfg.stamp,
                   style=ButtonStyle.blue,
                   disabled=(enabled == False))
