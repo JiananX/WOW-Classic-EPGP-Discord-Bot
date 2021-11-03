@@ -16,9 +16,9 @@ async def sync_epgp_from_gsheet_to_json(message):
         print(r)
         raiders.append(r)
     jstr = json.dumps([ob.__dict__ for ob in raiders])
-    with open('epgp.txt', 'w') as outfile:
+    with open('epgp.json', 'w') as outfile:
         outfile.write(jstr)
-    await message.author.send('从google sheet中导入epgp.txt成功')
+    await message.author.send('从google sheet中导入epgp.json成功')
 
 
 async def sync_loot_from_gsheet_to_json(message):
@@ -31,13 +31,13 @@ async def sync_loot_from_gsheet_to_json(message):
         print(l)
         loots.append(l)
     jstr = json.dumps([ob.__dict__ for ob in loots])
-    with open('loot.txt', 'w') as outfile:
+    with open('loot.json', 'w') as outfile:
         outfile.write(jstr)
-    await message.author.send('从google sheet中导入loot.txt成功')
+    await message.author.send('从google sheet中导入loot.json成功')
 
 
 def load_epgp_from_json_to_memory():
-    with open('epgp.txt', 'r') as infile:
+    with open('epgp.json', 'r') as infile:
         json_data = infile.read()
     raiders = json.loads(json_data)
     for index, value in enumerate(raiders):
@@ -49,7 +49,7 @@ def load_epgp_from_json_to_memory():
 
 
 def load_loot_from_json_to_memory():
-    with open('loot.txt', 'r') as infile:
+    with open('loot.json', 'r') as infile:
         json_data = infile.read()
     loots = json.loads(json_data)
     for index, value in enumerate(loots):
@@ -59,6 +59,12 @@ def load_loot_from_json_to_memory():
 
 
 async def dump_epgp_from_memory_to_json(message):
+    # raider_dict can be empty only the raid is not started.
+    if (len(cfg.raider_dict) == 0):
+        await message.author.send(
+            'Please start a raid session to add new raid member')
+        return
+
     raiders = []
     for value in cfg.raider_dict.values():
         raiders.append(value)
@@ -71,8 +77,8 @@ async def dump_epgp_from_memory_to_json(message):
         'stand_by': ob.stand_by,
         'author': str(ob.author),
         'author_id': ob.author_id
-    } for ob in raiders])
-    with open('epgp.txt', 'w') as outfile:
+    } for ob in raiders], indent=4)
+    with open('epgp.json', 'w') as outfile:
         outfile.write(jstr)
 
     await message.channel.send('EPGP write back to json successfully')
@@ -82,6 +88,6 @@ def dump_loot_from_memory_to_json():
     loots = []
     for value in cfg.loot_dict.values():
         loots.append(value)
-    jstr = json.dumps([ob.__dict__ for ob in loots])
-    with open('loot.txt', 'w') as outfile:
+    jstr = json.dumps([ob.__dict__ for ob in loots], indent=4)
+    with open('loot.json', 'w') as outfile:
         outfile.write(jstr)

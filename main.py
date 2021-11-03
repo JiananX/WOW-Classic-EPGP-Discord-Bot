@@ -138,12 +138,12 @@ async def on_admin_message(message):
       Admin|a add -id    游戏ID [-ep XX] [-gp XX] 添加新的游戏ID到DB
       Admin|a decay      衰减DB中所有的EP/GP
       Admin|a adjust -id 游戏ID [-ep XX] [-gp XX] [-r 原因] 修改游戏ID的EP/GP
-      Admin|a g2js pr    Gsheet中导入所有人的pr信息到epgp.txt文件
-      Admin|a g2js loot  Gsheet中导入所有loot信息到loot.txt文件
-      Admin|a js2m pr    epgp.txt导入epgp对象
-      Admin|a js2m loot  loot.txt导入loot对象
-      Admin|a (write|w)  epgp对象导入epgp.txt
-      Admin|a m2js loot  loot对象导入loot.txt
+      Admin|a g2js pr    Gsheet中导入所有人的pr信息到epgp.json文件
+      Admin|a g2js loot  Gsheet中导入所有loot信息到loot.json文件
+      Admin|a js2m pr    epgp.json导入epgp对象
+      Admin|a js2m loot  loot.json导入loot对象
+      Admin|a (write|w)  epgp对象导入epgp.json
+      Admin|a m2js loot  loot对象导入loot.json
       ''')
         
 async def on_distribution_message(message):
