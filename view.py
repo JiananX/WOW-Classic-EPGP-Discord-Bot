@@ -25,20 +25,29 @@ def main_spec_button(enable_loot_button):
                   style=ButtonStyle.red,
                   disabled=(enable_loot_button == False))
 
+def off_spec_button(enable_loot_button):
+    return Button(label="Off Spec",
+                  custom_id=constant.user_off_spec_id + cfg.stamp,
+                  style=ButtonStyle.red,
+                  disabled=(enable_loot_button == False))
 
 def gbid_confirm_button(enabled):
-    return Button(label="20% GP",
+    return Button(label="20% GBID GP",
                   custom_id=constant.loot_gbid_confirm_id + cfg.stamp,
                   style=ButtonStyle.blue,
                   disabled=(enabled == False))
 
-
 def main_spec_confirm_button(enabled):
-    return Button(label="100% GP",
+    return Button(label="100% Main Spec GP",
                   custom_id=constant.loot_main_spec_confirm_id + cfg.stamp,
                   style=ButtonStyle.blue,
                   disabled=(enabled == False))
 
+def off_spec_confirm_button(enabled):
+    return Button(label="50% Off Spec GP",
+                  custom_id=constant.loot_off_spec_confirm_id + cfg.stamp,
+                  style=ButtonStyle.blue,
+                  disabled=(enabled == False))
 
 def loot_cancel_button(enabled):
     return Button(label="cancel",
@@ -90,8 +99,7 @@ def loot_admin_embed():
 
 def user_view_component(enable_loot_button):
     return ActionRow(ActionRow(raid_pr_button(), my_pr_button()),
-                     ActionRow(main_spec_button(enable_loot_button)))
-
+                     ActionRow(main_spec_button(enable_loot_button), off_spec_button(enable_loot_button)))
 
 def loot_admin_view_component(enable_confirm_button, enable_cancel_button):
     return ActionRow(
@@ -105,7 +113,8 @@ def loot_admin_view_component(enable_confirm_button, enable_cancel_button):
             Button(label="Reward 200EP",
                    custom_id=constant.reward_200_ep + cfg.stamp,
                    style=ButtonStyle.red)),
-        ActionRow(gbid_confirm_button(enable_confirm_button),
+        ActionRow(#gbid_confirm_button(enable_confirm_button),
+                  off_spec_confirm_button(enable_confirm_button),
                   main_spec_confirm_button(enable_confirm_button),
                   loot_cancel_button(enable_cancel_button)))
 

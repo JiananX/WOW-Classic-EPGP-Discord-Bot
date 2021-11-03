@@ -5,6 +5,7 @@ global raider_dict
 global loot_dict
 '''分配相关'''
 global main_spec
+global off_spec
 global current_loot
 global current_winner
 global loot_message
