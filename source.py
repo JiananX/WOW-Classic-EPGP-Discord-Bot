@@ -26,7 +26,7 @@ async def sync_loot_from_gsheet_to_json(message):
     df = pd.DataFrame.from_dict(loot_from_gsheet)
     loots = []
     for index, row in df.iterrows():
-        l = loot.Loot(row['ID'], row['NAME'], row['GP'], False)
+        l = loot.Loot(row['ID'], row['NAME'], row['GP'], row['BIS'])
         cfg.loot_dict[row['ID']] = l
         print(l)
         loots.append(l)
@@ -54,7 +54,7 @@ def load_loot_from_json_to_memory():
     loots = json.loads(json_data)
     for index, value in enumerate(loots):
         l = loot.Loot(loots[index]['ID'], loots[index]['NAME'],
-                      loots[index]['GP'], False)
+                      loots[index]['GP'], loots[index]['BIS'])
         cfg.loot_dict[loots[index]['ID']] = l
 
 
