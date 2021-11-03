@@ -124,4 +124,12 @@ def add_loot_secion(embed):
     else:
         embed.add_field(name="GP", value="%s" % (cfg.current_loot.GP))
 
-    embed.add_field(name="分配结果", value='%s' % (cfg.loot_message), inline=False)
+    if (cfg.current_loot != None):
+        # In case there is no bis indication
+        if (len(cfg.current_loot.BIS) != 0):
+            embed.add_field(name="BIS:",
+                            value='%s' % (cfg.current_loot.BIS),
+                            inline=False)
+        embed.add_field(name="分配结果",
+                        value='%s' % (cfg.loot_message),
+                        inline=False)

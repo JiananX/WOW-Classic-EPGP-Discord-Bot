@@ -3,7 +3,7 @@ class Loot:
         self.ID = ID
         self.NAME = NAME
         self.GP = GP
-        self.BIS = False
+        self.BIS = BIS
 
     def __str__(self):
         return f'{self.NAME}  GP: {self.GP} bis: {self.BIS}'
