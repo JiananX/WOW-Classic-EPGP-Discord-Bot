@@ -96,7 +96,8 @@ async def add_new_member(message):
             return
 
         cfg.raider_dict.update(
-            {game_id: Raider(game_id, ep, gp, False, False, None)})
+            {game_id: Raider(game_id, ep, gp, False, False, None, None)})
+        await message.author.send('新ID添加成功')
     else:
         await message.author.send('请指定新的游戏ID')
 
@@ -172,11 +173,13 @@ async def adjust(message):
             await message.author.send('无法找到该ID')
             return
 
-        util.set_ep(game_id, util.get_ep(game_id) + ep)
-        util.set_gp(game_id, util.get_gp(game_id) + gp)
+        ep_before = util.get_ep(game_id)
+        gp_before = util.get_gp(game_id)
+        util.set_ep(game_id, ep_before + ep)
+        util.set_gp(game_id, gp_before + gp)
 
-        adjust_message = '调整成功 ID: %s EP: %s, GP: %s' % (
-            game_id, util.get_ep(game_id), util.get_gp(game_id))
+        adjust_message = '调整成功 ID: %s Before EP: %s, GP: %s, After EP: %s, GP: %s' % (
+            game_id, ep_before, gp_before, util.get_ep(game_id), util.get_gp(game_id))
         await message.author.send(adjust_message)
         util.log_msg(adjust_message)
     else:
