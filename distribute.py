@@ -46,9 +46,11 @@ async def cancel():
 
 async def confirm(factor):
     winner_id = util.find_game_id(cfg.current_winner)
-    gp = int(cfg.current_loot.GP * factor) + util.get_gp(winner_id)
+    before_gp = util.get_gp(winner_id)
+    loot_gp = int(cfg.current_loot.GP * factor)
+    gp = loot_gp + before_gp
     util.set_gp(winner_id, gp)
-    util.log_msg('%s分配给%s,当前GP%s' % (cfg.current_loot.NAME, winner_id, gp))
+    util.log_msg('%s GP %s 分配给%s, Before GP%s, After GP%s' % (cfg.current_loot.NAME, loot_gp, winner_id, before_gp, gp))
     await _reset()
 
 
