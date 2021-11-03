@@ -101,6 +101,14 @@ async def on_user_view_click(interaction):
         await interaction.respond(
             type=constant.update_message_button_response_type)
 
+    elif (custom_id == (constant.user_off_spec_id + cfg.stamp)):
+        cfg.off_spec.append(author)
+
+        original_msg = cfg.raid_user_msg[author]
+        await original_msg.edit(components=view.user_view_component(
+            enable_loot_button=False))
+        await interaction.respond(
+            type=constant.update_message_button_response_type)
 
 async def on_admin_message(message):
     if (str(message.author) not in constant.admin_token):
@@ -115,6 +123,8 @@ async def on_admin_message(message):
         await admin.decay(message)
     elif (match_keywork(constant.adjust_reg, message)):
         await admin.adjust(message)
+    elif (match_keywork(constant.gbid_reg, message)):
+        await admin.gbid(message)
     elif (match_keywork(constant.standby_reg, message)):
         await admin.standby(message)
     elif (match_keywork(constant.recover_reg, message)):
@@ -138,6 +148,7 @@ async def on_admin_message(message):
       Admin|a add -id    游戏ID [-ep XX] [-gp XX] 添加新的游戏ID到DB
       Admin|a decay      衰减DB中所有的EP/GP
       Admin|a adjust -id 游戏ID [-ep XX] [-gp XX] [-r 原因] 修改游戏ID的EP/GP
+      Admin|a gbid -id 游戏ID [-l XX] [-g XX] 记录gbid交易
       Admin|a g2js pr    Gsheet中导入所有人的pr信息到epgp.json文件
       Admin|a g2js loot  Gsheet中导入所有loot信息到loot.json文件
       Admin|a js2m pr    epgp.json导入epgp对象
@@ -162,11 +173,15 @@ async def on_distribution_message(message):
 async def on_loot_view_click(interaction):
     custom_id = interaction.custom_id
     if (custom_id == (constant.loot_gbid_confirm_id + cfg.stamp)):
-        await distribute.confirm(0.2)
+        await distribute.confirm(constant.gp_gbid_factor)
+        await interaction.respond(
+            type=constant.update_message_button_response_type)
+    elif (custom_id == (constant.loot_off_spec_confirm_id + cfg.stamp)):
+        await distribute.confirm(constant.gp_off_spec_factor)
         await interaction.respond(
             type=constant.update_message_button_response_type)
     elif (custom_id == (constant.loot_main_spec_confirm_id + cfg.stamp)):
-        await distribute.confirm(1)
+        await distribute.confirm(constant.gp_main_spec_factor)
         await interaction.respond(
             type=constant.update_message_button_response_type)
     elif (custom_id == (constant.loot_cancel_id + cfg.stamp)):
@@ -204,6 +219,7 @@ def initialize_global_vars():
     cfg.stamp = ''
 
     cfg.main_spec = None
+    cfg.off_spec = None
     cfg.current_winner = None
     cfg.current_loot = None
     cfg.loot_message = None

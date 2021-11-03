@@ -184,3 +184,45 @@ async def adjust(message):
         util.log_msg(adjust_message)
     else:
         await message.author.send('请指定游戏ID')
+
+async def gbid(message):
+    game_id_match = re.findall("-id ([^ ]+)", message.content, re.IGNORECASE)
+
+    if (len(game_id_match) == 1):
+        game_id = game_id_match[0]
+
+        loot_match = re.findall("-l ([^ ]+)", message.content,
+                              re.IGNORECASE)
+        gbid_match = re.findall("-g ([0-9]+)", message.content,
+                              re.IGNORECASE)
+        gp = 0;
+        loot = None;
+        if (len(loot_match) == 1):
+            if (cfg.loot_dict.get(loot_match[0]) == None):
+                await message.author.send('无法找到该装备， 请检查loot输入')
+                return
+            else:
+                loot = cfg.loot_dict.get(loot_match[0])
+                gp = int(int(loot.GP) * constant.gp_gbid_factor)
+        if (len(gbid_match) == 1):
+            gbid = int(gbid_match[0])
+
+        # raider_dict can be empty only the raid is not started.
+        if (len(cfg.raider_dict) == 0):
+            await message.author.send(
+                'Please start a raid session to adjust ep/gp')
+            return
+
+        if (cfg.raider_dict.get(game_id) == None):
+            await message.author.send('无法找到该ID')
+            return
+
+        gp_before = util.get_gp(game_id)
+        util.set_gp(game_id, gp_before + gp)
+
+        adjust_message = '%s, gbid: %s, 20%% GP:%s, 购买者: %s, Before GP: %s, After GP: %s' % (
+           loot.NAME, gbid, gp, game_id, gp_before, util.get_gp(game_id))
+        await message.author.send(adjust_message)
+        util.log_msg(adjust_message)
+    else:
+        await message.author.send('请指定游戏ID')

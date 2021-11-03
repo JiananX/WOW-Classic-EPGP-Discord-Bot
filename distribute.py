@@ -8,7 +8,7 @@ Command
 
 
 async def announcement(message):
-    if (cfg.main_spec != None):
+    if (cfg.main_spec != None or cfg.off_spec != None):
         await cfg.admin.send(
             'Last item still in progress, please cancel or confirm')
         return
@@ -21,6 +21,7 @@ async def announcement(message):
 
     cfg.current_loot = cfg.loot_dict[loot_id]
     cfg.main_spec = []
+    cfg.off_spec = []
 
     # Update user/admin message for loot section
     for msg in cfg.raid_user_msg.values():
@@ -50,7 +51,7 @@ async def confirm(factor):
     loot_gp = int(cfg.current_loot.GP * factor)
     gp = loot_gp + before_gp
     util.set_gp(winner_id, gp)
-    util.log_msg('%s GP %s 分配给%s, Before GP%s, After GP%s' % (cfg.current_loot.NAME, loot_gp, winner_id, before_gp, gp))
+    util.log_msg('%s 按照%s%%GP %s 分配给%s, Before GP %s, After GP %s' % (cfg.current_loot.NAME, factor*100, loot_gp, winner_id, before_gp, gp))
     await _reset()
 
 
@@ -67,6 +68,15 @@ async def _calculate_result():
     highest_pr = 0
     winner = None
 
+    for author in cfg.off_spec:
+        pr = util.calculate_pr(util.find_game_id(author))
+        if (pr > highest_pr):
+            highest_pr = pr
+            winner = author
+
+    # Reset hightest_pr to 0, even 1 main_spec will outbid n off_spec
+    highest_pr = 0
+
     for author in cfg.main_spec:
         pr = util.calculate_pr(util.find_game_id(author))
         if (pr > highest_pr):
@@ -76,12 +86,20 @@ async def _calculate_result():
     if (winner != None):
         all_string = '参与者\n'
         winner_string = '\n获胜者\n'
-        for author in cfg.main_spec:
+        for author in cfg.off_spec:
             game_id = util.find_game_id(author)
-            all_string += 'id: %s, pr: %s\n' % (game_id,
+            all_string += 'Off Spec id: %s, pr: %s\n' % (game_id,
                                                 util.calculate_pr(game_id))
             if (author == winner):
-                winner_string += 'id: %s, pr: %s' % (
+                winner_string += 'Off Spec id: %s, pr: %s' % (
+                    game_id, util.calculate_pr(game_id))
+
+        for author in cfg.main_spec:
+            game_id = util.find_game_id(author)
+            all_string += 'Main Spec id: %s, pr: %s\n' % (game_id,
+                                                util.calculate_pr(game_id))
+            if (author == winner):
+                winner_string += 'Main Spec id: %s, pr: %s' % (
                     game_id, util.calculate_pr(game_id))
 
         cfg.loot_message = all_string + winner_string
@@ -108,6 +126,7 @@ async def _calculate_result():
 
 async def _reset():
     cfg.main_spec = None
+    cfg.off_spec = None
     cfg.current_loot = None
     cfg.current_winner = None
     cfg.loot_message = None
