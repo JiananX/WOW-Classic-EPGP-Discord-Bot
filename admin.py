@@ -180,6 +180,11 @@ async def adjust(message):
 
         adjust_message = '调整成功 ID: %s Before EP: %s, GP: %s, After EP: %s, GP: %s' % (
             game_id, ep_before, gp_before, util.get_ep(game_id), util.get_gp(game_id))
+
+        reason_match = re.findall("-r ([^ ]+)", message.content, re.IGNORECASE)
+        if (len(reason_match) == 1):
+          adjust_message += ', 原因: %s'%(reason_match[0]);
+          
         await message.author.send(adjust_message)
         util.log_msg(adjust_message)
     else:
