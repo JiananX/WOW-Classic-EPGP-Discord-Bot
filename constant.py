@@ -28,7 +28,6 @@ user_my_pr_id = "user_my_pr"
 user_main_spec_id = "user_main_spec"
 user_off_spec_id = "user_off_spec"
 
-loot_gbid_confirm_id = "loot_gbid"
 loot_main_spec_confirm_id = "loot_main_spec"
 loot_off_spec_confirm_id = "loot_off_spec"
 loot_cancel_id = "loot_cancel"
@@ -37,7 +36,6 @@ reward_20_ep = 'reward 20'
 reward_150_ep = 'reward 150'
 reward_200_ep = 'reward 200'
 
-gp_gbid_factor = 0.2
 gp_off_spec_factor = 0.5
 gp_main_spec_factor = 1
 
@@ -45,8 +43,6 @@ gp_main_spec_factor = 1
 initial_gp = 1000
 decay_factor = 0.85
 update_message_button_response_type = 7
-''' TODO: Hide these token '''
-admin_token = 'Angulardart/Ditt#8629, Airbkb/Bigblackbang#0025'
 
 class_dict = {
     '战士': 1,
