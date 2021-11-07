@@ -12,8 +12,6 @@ import util
 import view
 import json
 
-import wcl.wcl
-
 bot = ComponentsBot('?')
 util.start_logger()
 
@@ -28,7 +26,7 @@ with open('local_settings.json') as infile:
 async def on_ready():
     initialize_global_vars()
 
-    print('haha')
+    print('CF Senior EPGP start')   
 
 
 @bot.event
@@ -57,9 +55,6 @@ async def on_message(message):
         await on_admin_message(message)
     elif (match_keywork(constant.dis_reg, message)):
         await on_distribution_message(message)
-    elif (message.content.startswith('wcl')):
-      wcl.wcl.query_basic_report("CfLZBJWwqxbmac36");
-      await message.author.send('成功');
     else:
         await on_user_message(message)
 

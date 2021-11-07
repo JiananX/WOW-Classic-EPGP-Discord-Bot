@@ -1,4 +1,5 @@
 from discord_components import Button, ActionRow, ButtonStyle
+
 import cfg
 import constant
 import discord
@@ -113,8 +114,8 @@ def loot_admin_view_component(enable_confirm_button, enable_cancel_button):
             Button(label="Reward 200EP",
                    custom_id=constant.reward_200_ep + cfg.stamp,
                    style=ButtonStyle.red)),
-        ActionRow(off_spec_confirm_button(enable_confirm_button),
-                  main_spec_confirm_button(enable_confirm_button),
+        ActionRow(main_spec_confirm_button(enable_confirm_button),
+                  off_spec_confirm_button(enable_confirm_button),
                   loot_cancel_button(enable_cancel_button)))
 
 
