@@ -15,18 +15,18 @@ import json
 bot = ComponentsBot('?')
 util.start_logger()
 
-admin_tokens = [];
+admin_tokens = None;
 discord_token = None;
 with open('local_settings.json') as infile:
       data = json.load(infile)
-      admin_tokens.append(data['admin_token'])
+      admin_tokens = data['admin_token']
       discord_token = data['discord_token']
       
 @bot.event
 async def on_ready():
     initialize_global_vars()
 
-    print('CF Senior EPGP start')
+    print('CF Senior EPGP start')   
 
 
 @bot.event
@@ -111,7 +111,7 @@ async def on_user_view_click(interaction):
             type=constant.update_message_button_response_type)
 
 async def on_admin_message(message):
-    if (str(message.author) not in constant.admin_token):
+    if (str(message.author) not in admin_tokens):
         await message.channel.send('您不是管理员')
         return
 
@@ -158,7 +158,7 @@ async def on_admin_message(message):
       ''')
         
 async def on_distribution_message(message):
-    if (str(message.author) not in constant.admin_token):
+    if (str(message.author) not in admin_tokens):
         await message.channel.send('您不是管理员')
         return
 
@@ -172,11 +172,7 @@ async def on_distribution_message(message):
 
 async def on_loot_view_click(interaction):
     custom_id = interaction.custom_id
-    if (custom_id == (constant.loot_gbid_confirm_id + cfg.stamp)):
-        await distribute.confirm(constant.gp_gbid_factor)
-        await interaction.respond(
-            type=constant.update_message_button_response_type)
-    elif (custom_id == (constant.loot_off_spec_confirm_id + cfg.stamp)):
+    if (custom_id == (constant.loot_off_spec_confirm_id + cfg.stamp)):
         await distribute.confirm(constant.gp_off_spec_factor)
         await interaction.respond(
             type=constant.update_message_button_response_type)
