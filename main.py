@@ -29,6 +29,37 @@ async def on_ready():
 
     print('CF Senior EPGP start')
 
+@bot.event
+async def on_voice_state_update(member, before, after):
+    #https://stackoverflow.com/questions/61918331/discord-js-join-leave-voice-channel-notification-in-text-channel?rq=1
+    newChannel = after.channel
+    if (newChannel is not None and newChannel.id == constant.channel):
+        print(member.name + ' joined server')
+        # raider_dict can be empty only the raid is not started.
+        if (len(cfg.raider_dict) == 0):
+            return
+        for name, raider in cfg.raider_dict.items():
+            if raider.author_id == member.id:
+                raider.in_raid = True
+                msg = await member.send(
+                     '欢迎参加本次Raid %s' % (name),
+                     components=view.user_view_component(False),
+                     embed=view.my_pr_embed(member.id))
+                cfg.raid_user_msg.update({member.id: msg})
+
+                #Update roster section of admin view
+                await cfg.admin_msg.edit(embed=view.loot_admin_embed())
+
+                util.log_msg('%s 加入Raid' % name)
+    elif (newChannel is None or newChannel.id != constant.channel):
+        print(member.name + " left server")
+        # raider_dict can be empty only the raid is not started.
+        if (len(cfg.raider_dict) == 0):
+            return
+        for name, raider in cfg.raider_dict.items():
+            if raider.author_id == member.id:
+                raider.in_raid = False
+                util.log_msg('%s 离开Raid' % name)
 
 @bot.event
 async def on_button_click(interaction):
@@ -84,19 +115,19 @@ async def on_user_view_click(interaction):
     custom_id = interaction.custom_id
 
     if (custom_id == (constant.user_raid_pr_list_id + cfg.stamp)):
-        original_msg = cfg.raid_user_msg[author]
+        original_msg = cfg.raid_user_msg[author.id]
         await original_msg.edit(embed=view.raid_pr_embed())
         await interaction.respond(
             type=constant.update_message_button_response_type)
     elif (custom_id == (constant.user_my_pr_id + cfg.stamp)):
-        original_msg = cfg.raid_user_msg[author]
-        await original_msg.edit(embed=view.my_pr_embed(author))
+        original_msg = cfg.raid_user_msg[author.id]
+        await original_msg.edit(embed=view.my_pr_embed(author.id))
         await interaction.respond(
             type=constant.update_message_button_response_type)
     elif (custom_id == (constant.user_main_spec_id + cfg.stamp)):
         cfg.main_spec.append(author)
 
-        original_msg = cfg.raid_user_msg[author]
+        original_msg = cfg.raid_user_msg[author.id]
         await original_msg.edit(components=view.user_view_component(
             enable_loot_button=False))
         await interaction.respond(
@@ -105,7 +136,7 @@ async def on_user_view_click(interaction):
     elif (custom_id == (constant.user_off_spec_id + cfg.stamp)):
         cfg.off_spec.append(author)
 
-        original_msg = cfg.raid_user_msg[author]
+        original_msg = cfg.raid_user_msg[author.id]
         await original_msg.edit(components=view.user_view_component(
             enable_loot_button=False))
         await interaction.respond(
@@ -131,6 +162,8 @@ async def on_admin_message(message):
         await admin.standby(message)
     elif (match_keywork(constant.recover_reg, message)):
         await admin.recover_raid(message, bot)
+    elif (match_keywork(constant.sync_from_discord_channel, message)):
+        await admin.sync_from_discord_channel(message, bot)
     elif (match_keywork(constant.sync_epgp_from_gsheet_to_json, message)):
         await source.sync_epgp_from_gsheet_to_json(message)
     elif (match_keywork(constant.sync_loot_from_gsheet_to_json, message)):

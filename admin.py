@@ -22,8 +22,6 @@ async def start_new_raid(message):
 
     # Reset some of the fields read from source
     for raider in cfg.raider_dict.values():
-        raider.author = None
-        raider.author_id = None
         raider.in_raid = False
         raider.stand_by = False
 
@@ -34,6 +32,26 @@ async def start_new_raid(message):
 
     util.log_msg('%s开始Raid' % (cfg.admin))
 
+async def sync_from_discord_channel(message, client):
+    channel = client.get_channel(constant.channel)
+    members = channel.members
+
+    memids = []
+    for member in members:
+        memids.append(member.name)
+        for name, raider in cfg.raider_dict.items():
+            if raider.author_id == member.id:
+                raider.in_raid = True
+                msg = await member.send(
+                     '欢迎参加本次Raid %s' % (name),
+                     components=view.user_view_component(False),
+                     embed=view.my_pr_embed(member.id))
+                cfg.raid_user_msg.update({member.id: msg})
+
+                #Update roster section of admin view
+                await cfg.admin_msg.edit(embed=view.loot_admin_embed())
+                util.log_msg('%s 加入Raid' % name)
+    await message.channel.send('以下加入Raid：' + str(memids))
 
 async def recover_raid(message, client):
     if (cfg.admin != None):
@@ -52,14 +70,12 @@ async def recover_raid(message, client):
             user = await client.fetch_user(raider.author_id)
             msg = await user.send('重新参加本次Raid %s' % (raider.ID),
                                   components=view.user_view_component(False),
-                                  embed=view.my_pr_embed(raider.author))
-            cfg.raid_user_msg.update({user: msg})
+                                  embed=view.my_pr_embed(raider.author.id))
+            cfg.raid_user_msg.update({user.id: msg})
             # Need to re-assign the user obj to author, as during json transformation,
             # author will be translate to string
             raider.author = user
         else:
-            raider.author = None
-            raider.author_id = None
             raider.in_raid = False
             raider.stand_by = False
 

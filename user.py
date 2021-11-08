@@ -24,8 +24,8 @@ async def member_login(message):
     msg = await message.channel.send(
         '欢迎参加本次Raid %s' % (game_id),
         components=view.user_view_component(False),
-        embed=view.my_pr_embed(message.author))
-    cfg.raid_user_msg.update({message.author: msg})
+        embed=view.my_pr_embed(message.author.id))
+    cfg.raid_user_msg.update({message.author.id: msg})
 
     # Update roster section of admin view
     await cfg.admin_msg.edit(embed=view.loot_admin_embed())
