@@ -2,3 +2,4 @@ local_settings.json
 epgp_keyfile.json
 env/
 wcl/auth.json
+**/__pycache__/

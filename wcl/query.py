@@ -15,11 +15,12 @@ def basic_report_query(code):
                     name,
                     startTime,
                     endTime,
+                    friendlyPlayers
                   }
                 }
               }
             }
-            '''%(code)
+            ''' % (code)
 
 
 def event_query(code, fight, spell_id):
@@ -33,4 +34,18 @@ def event_query(code, fight, spell_id):
                 }
               }
             }
-            '''%(code, fight.ID, fight.STARTTIME, fight.ENDTIME, spell_id)
+            ''' % (code, fight.ID, fight.STARTTIME, fight.ENDTIME, spell_id)
+
+
+def death_query(code, fight):
+    return '''
+            {
+              reportData {
+                report(code: "%s") {
+                  events(fightIDs: [%s], startTime: %s, endTime: %s,dataType: Deaths){
+                    data
+                  }
+                }
+              }
+            }
+            ''' % (code, fight.ID, fight.STARTTIME, fight.ENDTIME)
