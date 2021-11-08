@@ -15,18 +15,19 @@ import json
 bot = ComponentsBot('?')
 util.start_logger()
 
-admin_tokens = None;
-discord_token = None;
+admin_tokens = None
+discord_token = None
 with open('local_settings.json') as infile:
-      data = json.load(infile)
-      admin_tokens = data['admin_token']
-      discord_token = data['discord_token']
-      
+    data = json.load(infile)
+    admin_tokens = data['admin_token']
+    discord_token = data['discord_token']
+
+
 @bot.event
 async def on_ready():
     initialize_global_vars()
 
-    print('CF Senior EPGP start')   
+    print('CF Senior EPGP start')
 
 
 @bot.event
@@ -110,6 +111,7 @@ async def on_user_view_click(interaction):
         await interaction.respond(
             type=constant.update_message_button_response_type)
 
+
 async def on_admin_message(message):
     if (str(message.author) not in admin_tokens):
         await message.channel.send('您不是管理员')
@@ -156,7 +158,8 @@ async def on_admin_message(message):
       Admin|a (write|w)  epgp对象导入epgp.json
       Admin|a m2js loot  loot对象导入loot.json
       ''')
-        
+
+
 async def on_distribution_message(message):
     if (str(message.author) not in admin_tokens):
         await message.channel.send('您不是管理员')

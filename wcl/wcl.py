@@ -1,6 +1,7 @@
 from wcl.wcl_object import ReportCharacter, Fight, FightEvent
-from wcl.query import basic_report_query, event_query
+from wcl.query import basic_report_query, event_query, death_query
 
+import math
 import json
 import requests
 
@@ -8,6 +9,7 @@ token = None
 report_fights = {}
 report_characters = {}
 report_potion_usage = {}
+report_deaths = {}
 
 
 def initilization():
@@ -39,7 +41,7 @@ def query_basic_report(code):
         report_fights.update({
             fight["id"]:
             Fight(fight["id"], fight['name'], fight["startTime"],
-                  fight["endTime"])
+                  fight["endTime"], fight['friendlyPlayers'])
         })
 
     current_character = result["masterData"]["actors"]
@@ -49,12 +51,50 @@ def query_basic_report(code):
                 character["id"]:
                 ReportCharacter(character["id"], character['name'])
             })
+    res = ''
 
     # (TODO) Consider remove this with other feature
     for fight in report_fights.values():
+        res += fight.NAME + ' '
+
         if (report_potion_usage.get(fight.NAME) == None):
             print(fight.NAME)
+            deaths = _send_gql_request(
+                death_query(code, report_fights[fight.ID])
+            )["data"]["reportData"]["report"]["events"]["data"]
+            cur_deaths = {}
+            # (TODO) Conside 战斗复活、诈尸、灵魂石
+            for death in deaths:
+                cur_deaths.update({death["targetID"]: death["timestamp"]})
+
+            report_deaths.update({fight.NAME: cur_deaths})
             query_brust_and_mana_potion(code, fight.ID)
+    res += '\n'
+
+    for character in report_characters.values():
+        res += character.NAME + ' '
+
+        for fight in report_fights.values():
+            potion_usage = report_potion_usage[fight.NAME]
+            if (character.ID not in fight.PLAYERS):
+              res += 'X '
+            else:
+              time_overlap = fight.ENDTIME - fight.STARTTIME;
+              # give 0.15 minutes as buffer e.g. 6: 03 
+              expectation = math.floor((time_overlap / 60000.0 - 0.15) / 2)
+              if (character.ID in  report_deaths[fight.NAME].keys()):
+                time_overlap = report_deaths[fight.NAME][character.ID] - fight.STARTTIME;
+                expectation = math.floor(time_overlap / 60000.0 / 2)
+                expectation = '[%s]'%(expectation)
+              
+              if (potion_usage.get(character.NAME) == None):
+                    res += '0/%s '%(expectation)  
+              else:
+                res += str(potion_usage[character.NAME]) + '/' + str(expectation) + ' '
+
+        res += '\n'
+
+    print(res)
 
 
 def query_brust_and_mana_potion(code, fight_id):
@@ -82,7 +122,7 @@ def query_brust_and_mana_potion(code, fight_id):
 
     potion_dic = {}
     for event in tracking_events:
-        game_id = report_characters[event.ACTOR_ID].NAME;
+        game_id = report_characters[event.ACTOR_ID].NAME
         if (potion_dic.get(game_id) == None):
             potion_dic.update({game_id: 1})
         else:
