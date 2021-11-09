@@ -33,25 +33,26 @@ async def start_new_raid(message):
     util.log_msg('%s开始Raid' % (cfg.admin))
 
 async def sync_from_discord_channel(message, client):
+    #https://stackoverflow.com/questions/50084002/discord-py-getting-a-list-of-all-of-the-members-in-a-specific-voice-channel
     channel = client.get_channel(constant.raid_channel)
-    members = channel.members
-
-    memids = []
-    for member in members:
-        memids.append(member.name)
+    member_ids = channel.voice_states.keys()
+    member_names = []
+    for member_id in member_ids:
         for name, raider in cfg.raider_dict.items():
-            if raider.author_id == member.id:
+            if raider.author_id == member_id:
+                member_names.append(name)
                 raider.in_raid = True
-                msg = await member.send(
+                user = await client.fetch_user(member_id)
+                msg = await user.send(
                      '欢迎参加本次Raid %s' % (name),
                      components=view.user_view_component(False),
-                     embed=view.my_pr_embed(member.id))
-                cfg.raid_user_msg.update({member.id: msg})
+                     embed=view.my_pr_embed(member_id))
+                cfg.raid_user_msg.update({member_id: msg})
 
                 #Update roster section of admin view
                 await cfg.admin_msg.edit(embed=view.loot_admin_embed())
                 util.log_msg('%s 加入Raid' % name)
-    await message.channel.send('以下加入Raid：' + str(memids))
+    await message.channel.send('以下加入Raid：' + str(member_names))
 
 async def recover_raid(message, client):
     if (cfg.admin != None):
