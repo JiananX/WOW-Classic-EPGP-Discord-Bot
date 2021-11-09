@@ -125,7 +125,7 @@ async def on_user_view_click(interaction):
         await interaction.respond(
             type=constant.update_message_button_response_type)
     elif (custom_id == (constant.user_main_spec_id + cfg.stamp)):
-        cfg.main_spec.append(author)
+        cfg.main_spec.append(author.id)
 
         original_msg = cfg.raid_user_msg[author.id]
         await original_msg.edit(components=view.user_view_component(
@@ -134,7 +134,7 @@ async def on_user_view_click(interaction):
             type=constant.update_message_button_response_type)
 
     elif (custom_id == (constant.user_off_spec_id + cfg.stamp)):
-        cfg.off_spec.append(author)
+        cfg.off_spec.append(author.id)
 
         original_msg = cfg.raid_user_msg[author.id]
         await original_msg.edit(components=view.user_view_component(
