@@ -65,7 +65,7 @@ def log_msg(msg):
 
 def find_game_id(author):
     for raider in cfg.raider_dict.values():
-        if (raider.author == author):
+        if (raider.author == author or raider.author_id == author):
             return raider.ID
 
     return None

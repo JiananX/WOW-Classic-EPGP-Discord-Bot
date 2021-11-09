@@ -26,7 +26,7 @@ async def announcement(message):
     # Update user/admin message for loot section
     for msg in cfg.raid_user_msg.values():
         await msg.edit(
-            embed=view.my_pr_embed(message.author),
+            embed=view.my_pr_embed(message.author.id),
             components=view.user_view_component(enable_loot_button=True))
     await cfg.admin_msg.edit(embed=view.loot_admin_embed())
 
@@ -105,9 +105,9 @@ async def _calculate_result():
         cfg.loot_message = all_string + winner_string
         cfg.current_winner = winner
 
-        for user in cfg.raid_user_msg.keys():
-            msg = cfg.raid_user_msg[user]
-            await msg.edit(embed=view.my_pr_embed(user))
+        for user_id in cfg.raid_user_msg.keys():
+            msg = cfg.raid_user_msg[user_id]
+            await msg.edit(embed=view.my_pr_embed(user_id))
 
         await cfg.admin_msg.edit(embed=view.loot_admin_embed(),
                                  components=view.loot_admin_view_component(
@@ -115,9 +115,9 @@ async def _calculate_result():
     else:
         cfg.loot_message = '本次Loot无人GP需求'
 
-        for user in cfg.raid_user_msg.keys():
-            msg = cfg.raid_user_msg[user]
-            await msg.edit(embed=view.my_pr_embed(user))
+        for user_id in cfg.raid_user_msg.keys():
+            msg = cfg.raid_user_msg[user_id]
+            await msg.edit(embed=view.my_pr_embed(user_id))
 
         await cfg.admin_msg.edit(embed=view.loot_admin_embed(),
                                  components=view.loot_admin_view_component(
@@ -131,9 +131,9 @@ async def _reset():
     cfg.current_winner = None
     cfg.loot_message = None
 
-    for user in cfg.raid_user_msg.keys():
-        msg = cfg.raid_user_msg[user]
-        await msg.edit(embed=view.my_pr_embed(user))
+    for user_id in cfg.raid_user_msg.keys():
+        msg = cfg.raid_user_msg[user_id]
+        await msg.edit(embed=view.my_pr_embed(user_id))
 
     await cfg.admin_msg.edit(embed=view.loot_admin_embed(),
                              components=view.loot_admin_view_component(

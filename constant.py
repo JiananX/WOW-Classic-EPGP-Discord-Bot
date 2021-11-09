@@ -2,6 +2,7 @@
 login_reg = "Login ([^ ]+)"
 
 # admin.py
+channel = 903815661258670154
 start_new_raid_reg = "(Admin|a) start"
 add_new_member_reg = "(Admin|a) add .+"
 decay_reg = "(Admind|a) decay"
@@ -9,6 +10,7 @@ adjust_reg = "(Admind|a) adjust .+"
 gbid_reg = "(Admind|a) gbid .+"
 standby_reg = "(Admind|a) standby .+"
 recover_reg = "(Admind|a) recover"
+sync_from_discord_channel = "(Admind|a) channel"
 sync_epgp_from_gsheet_to_json = "(Admin|a) g2js pr"
 sync_loot_from_gsheet_to_json = "(Admin|a) g2js loot"
 load_epgp_from_json_to_memory = "(Admin|a) js2m pr"
