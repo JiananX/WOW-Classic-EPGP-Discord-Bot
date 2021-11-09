@@ -33,6 +33,7 @@ async def start_new_raid(message):
     util.log_msg('%s开始Raid' % (cfg.admin))
 
 async def sync_from_discord_channel(message, client):
+    #https://stackoverflow.com/questions/50084002/discord-py-getting-a-list-of-all-of-the-members-in-a-specific-voice-channel
     channel = client.get_channel(constant.raid_channel)
     member_ids = channel.voice_states.keys()
     member_names = []
