@@ -2,7 +2,8 @@
 login_reg = "Login ([^ ]+)"
 
 # admin.py
-channel = 849111061840003079
+raid_channel = 849111061840003079
+loot_channel = 907482797579595806
 start_new_raid_reg = "(Admin|a) start"
 add_new_member_reg = "(Admin|a) add .+"
 decay_reg = "(Admind|a) decay"

@@ -33,7 +33,7 @@ async def start_new_raid(message):
     util.log_msg('%s开始Raid' % (cfg.admin))
 
 async def sync_from_discord_channel(message, client):
-    channel = client.get_channel(constant.channel)
+    channel = client.get_channel(constant.raid_channel)
     members = channel.members
 
     memids = []
