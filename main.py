@@ -33,7 +33,7 @@ async def on_ready():
 async def on_voice_state_update(member, before, after):
     #https://stackoverflow.com/questions/61918331/discord-js-join-leave-voice-channel-notification-in-text-channel?rq=1
     newChannel = after.channel
-    if (newChannel is not None and newChannel.id == constant.channel):
+    if (newChannel is not None and newChannel.id == constant.raid_channel):
         print(member.name + ' joined server')
         # raider_dict can be empty only the raid is not started.
         if (len(cfg.raider_dict) == 0):
@@ -51,7 +51,7 @@ async def on_voice_state_update(member, before, after):
                 await cfg.admin_msg.edit(embed=view.loot_admin_embed())
 
                 util.log_msg('%s 加入Raid' % name)
-    elif (newChannel is None or newChannel.id != constant.channel):
+    elif (newChannel is None or newChannel.id != constant.raid_channel):
         print(member.name + " left server")
         # raider_dict can be empty only the raid is not started.
         if (len(cfg.raider_dict) == 0):
