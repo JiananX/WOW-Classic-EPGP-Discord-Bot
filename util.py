@@ -35,18 +35,6 @@ def backfill_gp(game_id):
     set_gp(game_id, constant.initial_gp)
 
 
-def generate_pr_list(pr_list, ep_list, gp_list):
-    pr_message = 'ID  EP  GP  PR\n'
-    # return List of key-value tuple/pair entry
-    sorted_pr_list = sorted(pr_list.items(), key=lambda x: x[1], reverse=True)
-    for entry in sorted_pr_list:
-        game_id = entry[0]
-        pr_message += '%s  %s  %s  %s\n' % (game_id, ep_list[game_id],
-                                            gp_list[game_id], entry[1])
-
-    return pr_message
-
-
 def start_logger():
     formatter = logging.Formatter('%(asctime)s %(message)s')
     fh = logging.FileHandler('CF_Senior_EPGP.log')
@@ -63,9 +51,9 @@ def log_msg(msg):
     logger.info(msg)
 
 
-def find_game_id(author):
+def find_game_id(user_id):
     for raider in cfg.raider_dict.values():
-        if (raider.author == author or raider.author_id == author):
+        if (raider.author_id == user_id):
             return raider.ID
 
     return None
