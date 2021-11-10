@@ -38,6 +38,7 @@ reward_200_ep = 'reward 200'
 
 gp_off_spec_factor = 0.5
 gp_main_spec_factor = 1
+gp_gbid_factor = 0.2
 
 # common constant
 initial_gp = 1000
