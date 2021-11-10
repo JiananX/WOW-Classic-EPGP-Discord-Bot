@@ -77,20 +77,22 @@ def query_basic_report(code):
         for fight in report_fights.values():
             potion_usage = report_potion_usage[fight.NAME]
             if (character.ID not in fight.PLAYERS):
-              res += 'X '
+                res += 'X '
             else:
-              time_overlap = fight.ENDTIME - fight.STARTTIME;
-              # give 0.15 minutes as buffer e.g. 6: 03 
-              expectation = math.floor((time_overlap / 60000.0 - 0.15) / 2)
-              if (character.ID in  report_deaths[fight.NAME].keys()):
-                time_overlap = report_deaths[fight.NAME][character.ID] - fight.STARTTIME;
-                expectation = math.floor(time_overlap / 60000.0 / 2)
-                expectation = '[%s]'%(expectation)
-              
-              if (potion_usage.get(character.NAME) == None):
-                    res += '0/%s '%(expectation)  
-              else:
-                res += str(potion_usage[character.NAME]) + '/' + str(expectation) + ' '
+                time_overlap = fight.ENDTIME - fight.STARTTIME
+                # give 0.15 minutes as buffer e.g. 6: 03
+                expectation = math.floor((time_overlap / 60000.0 - 0.15) / 2)
+                if (character.ID in report_deaths[fight.NAME].keys()):
+                    time_overlap = report_deaths[fight.NAME][
+                        character.ID] - fight.STARTTIME
+                    expectation = math.floor(time_overlap / 60000.0 / 2)
+                    expectation = '[%s]' % (expectation)
+
+                if (potion_usage.get(character.NAME) == None):
+                    res += '0/%s ' % (expectation)
+                else:
+                    res += str(potion_usage[character.NAME]) + '/' + str(
+                        expectation) + ' '
 
         res += '\n'
 
@@ -108,7 +110,14 @@ def query_brust_and_mana_potion(code, fight_id):
     # 41617: 要塞大蓝
     # 28508: 毁灭药水
     # 28507: 加速药水
-    tracking_spell_id = [28499, 41617, 41618, 28508, 28507]
+    # 28714: 烈焰菇
+    # 27869: 黑暗符文
+    # 17528: 强效怒气药水
+    # 28495: 治疗药水
+    # 28515: 铁盾药水
+    tracking_spell_id = [
+        28499, 41617, 41618, 28508, 28507, 28714, 27869, 17528, 28495, 28515
+    ]
 
     tracking_events = []
     for spell_id in tracking_spell_id:
