@@ -78,7 +78,7 @@ async def _calculate_result():
     factor = 0;
     all_bis_class = []
     if len(cfg.current_loot.BIS) != 0:
-      for bis in cfg.current_loot.BIS.split(' '):
+      for bis in cfg.current_loot.BIS.strip().split(' '):
         all_bis_class.append(bis[len(bis) - 2])
     
     all_bis_class = set(all_bis_class)
