@@ -37,6 +37,7 @@ loot_channel = 907482797579595806
 
 gp_off_spec_factor = 0.5
 gp_main_spec_factor = 1
+gp_gbid_factor = 0.2
 
 class_dict = {
     '战士': 1,
