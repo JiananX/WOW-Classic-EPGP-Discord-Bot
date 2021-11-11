@@ -90,14 +90,10 @@ def raider_view_embed():
                             key=lambda x: x[1],
                             reverse=True)
 
-    pr_message = ''
     for entry in sorted_pr_list:
         raider = entry[0]
-        pr_message += '%s (EP:%s GP:%s, PR:%s)\n' % (raider.ID, raider.EP,
-                                                     raider.GP, entry[1])
-
-    embed.add_field(name="PR列表", value='>>> %s' % (pr_message))
-
+        embed.add_field(name=raider.ID, value='EP:%s GP:%s, PR:%s' %  (raider.EP,
+                                                     raider.GP, entry[1]))
     return embed
 
 
