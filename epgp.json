@@ -31,9 +31,9 @@
     },
     {
         "ID": "Bansheegd",
-        "EP": 9677,
-        "GP": 2075,
-        "PR": 4.664,
+        "EP": 8672,
+        "GP": 3080,
+        "PR": 2.816,
         "in_raid": false,
         "stand_by": false,
         "author": "Crazycat#9710",
@@ -94,7 +94,7 @@
         "EP": 7448,
         "GP": 1275,
         "PR": 5.842,
-        "in_raid": true,
+        "in_raid": false,
         "stand_by": false,
         "author": "Keliderstol#6177",
         "author_id": 161245615915925504
@@ -201,9 +201,9 @@
     },
     {
         "ID": "Airbkb",
-        "EP": 9739,
-        "GP": 2525,
-        "PR": 3.857,
+        "EP": 8734,
+        "GP": 3530,
+        "PR": 2.474,
         "in_raid": true,
         "stand_by": false,
         "author": "Airbkb/Bigblackbang#0025",
@@ -224,7 +224,7 @@
         "EP": 7996,
         "GP": 3790,
         "PR": 2.11,
-        "in_raid": true,
+        "in_raid": false,
         "stand_by": false,
         "author": "Anmiel#5309",
         "author_id": 717200820579598437
