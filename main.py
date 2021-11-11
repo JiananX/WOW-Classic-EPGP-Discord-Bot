@@ -86,7 +86,7 @@ async def on_message(message):
 
             await distribute.announcement(message)
 
-        if (match_keywork(constant.login_reg, message)):
+        if (match_keywork(constant.update_reg, message)):
             game_id = message.content.split(" ")[1]
 
             if (cfg.raider_dict.get(game_id) == None):

@@ -1,5 +1,5 @@
 # reg for message
-login_reg = "Login ([^ ]+)"
+update_reg = "Update ([^ ]+)"
 admin_reg = "(Admin|a) .+"
 announcement_reg = "(Distribute|d) [a-z]+"
 
