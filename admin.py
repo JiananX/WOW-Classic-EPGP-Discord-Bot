@@ -10,8 +10,8 @@ import view
 
 
 async def start_new_raid(message, client):
-    if (len(cfg.raider_disct) != 0):
-        await message.channel.send('Raid已经开始')
+    if (len(cfg.raider_dict) != 0):
+        await message.channel.send('Raid has already been started')
         return
 
     cfg.stamp = str(time.time())
@@ -31,9 +31,8 @@ async def start_new_raid(message, client):
             if raider.author_id == member_id:
                 raider.in_raid = True
 
-    cfg.admin_msg = await message.send(embed=view.admin_embed(),
-                                 components=view.admin_view_component())
-    util.log_msg('%s开始Raid' % (cfg.admin))
+    await view.update_admin_view(target_source=message.channel)
+    await view.update_raider_view(target_source=cfg.loot_channel)
 
 
 async def add_new_member(message):
@@ -49,11 +48,11 @@ async def add_new_member(message):
         game_id = game_id_match[0]
 
         if (cfg.raider_dict.get(game_id) != None):
-            await message.author.send('当前游戏ID已经存在于DB')
+            await message.author.send('The game id is already existed')
             return
 
-        ep_match = re.findall("-ep ([0-9]+)", message.content, re.IGNORECASE)
-        gp_match = re.findall("-gp ([0-9]+)", message.content, re.IGNORECASE)
+        ep_match = re.findall('-ep ([0-9]+)', message.content, re.IGNORECASE)
+        gp_match = re.findall('-gp ([0-9]+)', message.content, re.IGNORECASE)
         ep = 0
         gp = constant.initial_gp
         if (len(ep_match) == 1):
@@ -63,9 +62,10 @@ async def add_new_member(message):
 
         cfg.raider_dict.update(
             {game_id: Raider(game_id, ep, gp, False, False, None, None)})
-        await message.author.send('新ID添加成功, 需要用户自己更新User ID')
+        await message.author.send(
+            'New game id has been added, user need to login')
     else:
-        await message.author.send('请指定新的游戏ID')
+        await message.author.send('No game id in the command')
 
 
 async def decay(message):
@@ -85,14 +85,14 @@ async def decay(message):
 
     cfg.raider_dict = {}
 
-    await message.channel.send("Deacy 成功，系数为%s" % (constant.decay_factor))
+    await message.channel.send('Deacy successfully' % (constant.decay_factor))
     util.log_msg("Deacy 成功，系数为%s" % (constant.decay_factor))
 
 
 async def standby(message):
     if (len(cfg.raider_dict) == 0):
         await message.author.send(
-            'Please start a raid session to add new raid member')
+            'Please start a raid session to standby a raid member')
         return
 
     game_id_match = re.findall("-id ([^ ]+)", message.content, re.IGNORECASE)
@@ -101,15 +101,16 @@ async def standby(message):
         game_id = game_id_match[0]
 
         if (cfg.raider_dict.get(game_id) == None):
-            await message.author.send('无法找到该ID')
+            await message.author.send('Cannot find game id')
             return
 
         if (cfg.raider_dict[game_id].in_raid != True):
-            await message.author.send('该ID并未在Raid中')
+            await message.author.send('Game id is not in Raid yet')
             return
 
         cfg.raider_dict[game_id].stand_by = True
-        await cfg.admin_msg.edit(embed=view.admin_embed())
+
+        await view.update_admin_view()
 
         util.log_msg("%s stand by" % (game_id))
 
@@ -127,7 +128,7 @@ async def adjust(message):
         game_id = game_id_match[0]
 
         if (cfg.raider_dict.get(game_id) == None):
-            await message.author.send('无法找到该ID')
+            await message.author.send('Cannot find game id')
             return
 
         ep_match = re.findall("-ep ([+-]?[0-9]+)", message.content,
@@ -155,9 +156,12 @@ async def adjust(message):
             adjust_message += ', 原因: %s' % (reason_match[0])
 
         await message.author.send(adjust_message)
+
+        await view.update_raider_view()
+
         util.log_msg(adjust_message)
     else:
-        await message.author.send('请指定游戏ID')
+        await message.author.send('No game id in the command')
 
 
 async def gbid(message):
@@ -167,8 +171,8 @@ async def gbid(message):
                                   )
         return
 
-    if (cfg.curret_loot == None):
-        await message.author.send('Not distributing')
+    if (cfg.current_loot is not None):
+        await message.author.send('Please cancel distribute before gbid')
         return
 
     game_id_match = re.findall("-id ([^ ]+)", message.content, re.IGNORECASE)
@@ -177,14 +181,14 @@ async def gbid(message):
         game_id = game_id_match[0]
 
         if (cfg.raider_dict.get(game_id) == None):
-            await message.author.send('无法找到该ID')
+            await message.author.send('Cannot find game id')
             return
 
         loot_match = re.findall("-l ([^ ]+)", message.content, re.IGNORECASE)
 
         if (len(loot_match) == 1):
             if (cfg.loot_dict.get(loot_match[0]) == None):
-                await message.author.send('无法找到该装备， 请检查loot输入')
+                await message.author.send('Cannot find this loot')
                 return
 
             loot = cfg.loot_dict.get(loot_match[0])
@@ -194,8 +198,11 @@ async def gbid(message):
             adjust_message = '%s, gbid: %s, 20%% GP:%s, 购买者: %s, Before GP: %s, After GP: %s' % (
                 loot.NAME, gbid, gp, game_id, gp_before, util.get_gp(game_id))
             await message.author.send(adjust_message)
+
+            await view.update_raider_view()
+
             util.log_msg(adjust_message)
         else:
-            await message.author.send('请确认物品')
+            await message.author.send('No loot id in the command')
     else:
-        await message.author.send('请指定游戏ID')
+        await message.author.send('No game id in the command')

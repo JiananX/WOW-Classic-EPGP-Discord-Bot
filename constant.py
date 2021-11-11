@@ -17,18 +17,15 @@ dump_epgp_from_memory_to_json = "(Admin|a) (write|w)"
 dump_loot_from_memory_to_json = "(Admin|a) m2js loot"
 
 # reg for button custom id
-user_raid_pr_list_id = "user_raid_pr_list"
-user_my_pr_id = "user_my_pr"
-
 loot_main_spec_confirm_id = "loot_main_spec_confirm"
 loot_off_spec_confirm_id = "loot_off_spec_confirm"
-user_main_spec_id = "loot_main_spec"
-user_off_spec_id = "loot_off_spec"
+loot_main_spec_id = "loot_main_spec"
+loot_off_spec_id = "loot_off_spec"
 loot_cancel_id = "loot_cancel"
 
-reward_20_ep = 'reward 20'
-reward_150_ep = 'reward 150'
-reward_200_ep = 'reward 200'
+reward_20_ep = 'reward_20'
+reward_150_ep = 'reward_150'
+reward_200_ep = 'reward_200'
 
 # common constant
 initial_gp = 1000

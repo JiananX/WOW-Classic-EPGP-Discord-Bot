@@ -21,12 +21,12 @@ with open('local_settings.json') as infile:
     admin_tokens = data['admin_token']
     discord_token = data['discord_token']
 
-cfg.loot_channel = bot.get_channel(constant.loot_channel)
-
 
 @bot.event
 async def on_ready():
     initialize_global_vars()
+
+    cfg.loot_channel = await bot.fetch_channel(constant.loot_channel)
 
     print('CF Senior EPGP start')
 
@@ -44,16 +44,19 @@ async def on_voice_state_update(member, before, after):
         for raider in cfg.raider_dict.values():
             if raider.author_id == member.id & raider.in_raid == False:
                 raider.in_raid = True
-                await cfg.admin_msg.edit(embed=view.admin_embed())
+                await view.update_admin_view()
+                await view.update_raider_view()
                 break
     elif ((newChannel is None or newChannel.id != constant.raid_channel)
-          & before.channel.id == constant.raid_channel):
+          and (before.channel is not None) and
+          (before.channel.id == constant.raid_channel)):
         print('%s left server' % (member.name))
 
         for raider in cfg.raider_dict.values():
             if raider.author_id == member.id & raider.in_raid == True:
                 raider.in_raid = False
-                await cfg.admin_msg.edit(embed=view.admin_embed())
+                await view.update_admin_view()
+                await view.update_raider_view()
                 break
 
 
@@ -93,7 +96,10 @@ async def on_message(message):
             cfg.raider_dict[game_id].in_raid = True
             cfg.raider_dict[game_id].author_id = message.author.id
 
-            await message.send("User id gets updated successfully")
+            await view.update_admin_view()
+            await view.update_raider_view()
+
+            await message.send('User id gets updated successfully')
 
 
 async def on_admin_message(message):
@@ -145,29 +151,10 @@ async def on_button_click(interaction):
 
     if (custom_id == None):
         return
-    elif (custom_id.startswith('user')):
-        await on_user_view_click(interaction)
     elif (custom_id.startswith('loot')):
         await on_loot_view_click(interaction)
     elif (custom_id.startswith('reward')):
         await on_reward_click(interaction)
-
-
-async def on_user_view_click(interaction):
-    user = interaction.user
-    custom_id = interaction.custom_id
-
-    if (custom_id == (constant.user_raid_pr_list_id + cfg.stamp)):
-        original_msg = cfg.raid_user_msg[author.id]
-        await original_msg.edit(embed=view.raid_pr_embed())
-        await interaction.respond(
-            type=constant.update_message_button_response_type)
-    elif (custom_id == (constant.user_my_pr_id + cfg.stamp)):
-        original_msg = cfg.raid_user_msg[author.id]
-        await original_msg.edit(embed=view.my_pr_embed(author.id))
-        await interaction.respond(
-            type=constant.update_message_button_response_type)
-  
 
 
 async def on_loot_view_click(interaction):
@@ -180,18 +167,23 @@ async def on_loot_view_click(interaction):
     elif (custom_id == (constant.loot_cancel_id + cfg.stamp)):
         await distribute.cancel()
     elif (custom_id == (constant.loot_main_spec_id + cfg.stamp)):
-        cfg.main_spec.append(interaction.user.id)
+        user_id = interaction.user.id
+        if ((user_id not in cfg.main_spec) & (user_id not in cfg.off_spec)):
+            cfg.main_spec.append(user_id)
     elif (custom_id == (constant.loot_off_spec_id + cfg.stamp)):
-        cfg.off_spec.append(interaction.user.id)
-    
+        user_id = interaction.user.id
+        if ((user_id not in cfg.main_spec) & (user_id not in cfg.off_spec)):
+            cfg.off_spec.append(interaction.user.id)
+
     if (custom_id.endswith(cfg.stamp)):
         await interaction.respond(
             type=constant.update_message_button_response_type)
 
+
 async def on_reward_click(interaction):
     custom_id = interaction.custom_id
 
-    match = re.fullmatch("reward (20|150|200)%s" % (cfg.stamp), custom_id)
+    match = re.fullmatch("reward_(20|150|200)%s" % (cfg.stamp), custom_id)
     if (match):
         ep = int(match[1])
 
@@ -200,6 +192,8 @@ async def on_reward_click(interaction):
             if ((raider.in_raid == True) & (raider.stand_by == False)):
                 util.set_ep(raider.ID, ep + util.get_ep(raider.ID))
                 eligible_raiders.append(raider.ID)
+
+        await view.update_raider_view()
 
         await interaction.respond(
             type=constant.update_message_button_response_type)
@@ -221,6 +215,7 @@ def initialize_global_vars():
     cfg.current_loot = None
 
     cfg.admin_msg = None
+    cfg.raider_msg = None
 
 
 bot.run(discord_token)

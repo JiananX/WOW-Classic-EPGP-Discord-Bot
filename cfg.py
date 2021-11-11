@@ -9,10 +9,9 @@ global loot_dict
 global main_spec
 # [discord_user_id]
 global off_spec
-
 global current_loot
 global current_winner
-global loot_message
 '''Global Message Object'''
 global loot_channel
 global admin_msg
+global raider_msg

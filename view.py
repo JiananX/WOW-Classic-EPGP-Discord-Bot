@@ -3,35 +3,8 @@ from discord_components import Button, ActionRow, ButtonStyle
 import cfg
 import constant
 import discord
-import user
 import util
 ''' Button '''
-
-
-def raid_pr_button():
-    return Button(label="团队PR列表",
-                  custom_id=constant.user_raid_pr_list_id + cfg.stamp,
-                  style=ButtonStyle.blue)
-
-
-def my_pr_button():
-    return Button(label="你的PR",
-                  custom_id=constant.user_my_pr_id + cfg.stamp,
-                  style=ButtonStyle.blue)
-
-
-def main_spec_button(enable):
-    return Button(label="Main Spec",
-                  custom_id=constant.user_main_spec_id + cfg.stamp,
-                  style=ButtonStyle.red,
-                  disabled=(enable == False))
-
-
-def off_spec_button(enable):
-    return Button(label="Off Spec",
-                  custom_id=constant.user_off_spec_id + cfg.stamp,
-                  style=ButtonStyle.red,
-                  disabled=(enable == False))
 
 
 def main_spec_confirm_button(enabled):
@@ -58,26 +31,24 @@ def loot_cancel_button(enabled):
 ''' Embed '''
 
 
-def loot_view_embed():
+def loot_view_embed(count_down):
     embed = discord.Embed(title='开始分配物品', color=discord.Color.random())
-    add_raid_pr_section(embed)
 
+    embed.add_field(name='Loot Name',
+                    value='> %s' % (cfg.current_loot.NAME),
+                    inline=False)
+    embed.add_field(name='GP',
+                    value='> %s' % (cfg.current_loot.GP),
+                    inline=False)
+    embed.add_field(name='BIS',
+                    value='> %s' % (cfg.current_loot.BIS),
+                    inline=False)
 
-def my_pr_embed(author):
-    embed = discord.Embed(title='你的PR',
-                          description=user.my_pr(author),
-                          color=discord.Color.random())
+    embed.add_field(name='Countdown', value='> %ss'%(count_down), inline=False)
     return embed
 
 
-def raid_pr_embed():
-    embed = discord.Embed(title='团队PR列表',
-                          description=user.raid_pr_list(),
-                          color=discord.Color.random())
-    return embed
-
-
-def admin_embed():
+def admin_embed_view():
     embed = discord.Embed(title='Admin Panel', color=discord.Color.random())
 
     total_raider = 0
@@ -86,21 +57,46 @@ def admin_embed():
         if (raider.in_raid == True):
             total_raider += 1
         if (raider.stand_by == True):
-            standby_raider.append(raider.NAME)
+            standby_raider.append(raider.ID)
 
     embed.add_field(name='Total Count',
                     value='> %s' % (total_raider),
                     inline=False)
     embed.add_field(name='Standby',
-                    value='> %s' % (standby_raider),
+                    value='>>> %s' % ('\n'.join(standby_raider)),
                     inline=False)
 
-    embed.add_field(name='Current Loot',
-                    value='> %s' % (str(cfg.current_loot)),
-                    inline=False)
-    embed.add_field(name='Current Loot Winner',
-                    value='> %s' % (cfg.current_winner),
-                    inline=False)
+    if (cfg.current_loot is not None):
+        embed.add_field(name='Current Loot',
+                        value='> %s' % (str(cfg.current_loot.NAME)),
+                        inline=False)
+        embed.add_field(name='Current Loot Winner',
+                        value='> %s' % (cfg.current_winner),
+                        inline=False)
+
+    return embed
+
+
+def raider_view_embed():
+    embed = discord.Embed(title='Raider Panel', color=discord.Color.random())
+
+    all_raiders = {}
+    for raider in cfg.raider_dict.values():
+        if (raider.in_raid == True):
+            all_raiders.update({raider: util.calculate_pr(raider.ID)})
+
+    # return List of key-value tuple/pair entry
+    sorted_pr_list = sorted(all_raiders.items(),
+                            key=lambda x: x[1],
+                            reverse=True)
+
+    pr_message = ''
+    for entry in sorted_pr_list:
+        raider = entry[0]
+        pr_message += '%s (EP:%s GP:%s, PR:%s)\n' % (raider.ID, raider.EP,
+                                                     raider.GP, entry[1])
+
+    embed.add_field(name="PR列表", value='>>> %s' % (pr_message))
 
     return embed
 
@@ -108,14 +104,19 @@ def admin_embed():
 ''' View component '''
 
 
-def loot_view_component(enable_button=True):
+def loot_view_component():
     return ActionRow(
-        ActionRow(main_spec_button(enable_button),
-                  off_spec_button(enable_button)))
+        ActionRow(
+            Button(label="Main Spec",
+                   custom_id=constant.loot_main_spec_id + cfg.stamp,
+                   style=ButtonStyle.red),
+            Button(label="Off Spec",
+                   custom_id=constant.loot_off_spec_id + cfg.stamp,
+                   style=ButtonStyle.red)))
 
 
 def admin_view_component(enable_confirm_button=False,
-                              enable_cancel_button=False):
+                         enable_cancel_button=False):
     return ActionRow(
         ActionRow(
             Button(label="Reward 20EP",
@@ -132,35 +133,28 @@ def admin_view_component(enable_confirm_button=False,
                   loot_cancel_button(enable_cancel_button)))
 
 
-''' Util '''
+'''
+Util
+'''
 
 
-def add_raid_pr_section(embed):
-    pr_list = {}
-    ep_list = {}
-    gp_list = {}
+async def update_admin_view(target_source=None,
+                            enable_confirm_button=False,
+                            enable_cancel_button=False):
+    if (cfg.admin_msg is None):
+        cfg.admin_msg = await target_source.send(
+            embed=admin_embed_view(),
+            components=admin_view_component(enable_confirm_button,
+                                            enable_cancel_button))
+    else:
+        await cfg.admin_msg.edit(embed=admin_embed_view(),
+                                 components=admin_view_component(
+                                     enable_confirm_button,
+                                     enable_cancel_button))
 
-    for game_id, raider in cfg.raider_dict.items():
-        if (raider.in_raid == True):
-            ep_list.update({game_id: raider.EP})
-            gp_list.update({game_id: raider.GP})
-            pr_list.update({game_id: util.calculate_pr(raider.ID)})
 
-    # return List of key-value tuple/pair entry
-    sorted_pr_list = sorted(pr_list.items(), key=lambda x: x[1], reverse=True)
-
-    game_ids = ''
-    eps = ''
-    gps = ''
-    prs = ''
-    for entry in sorted_pr_list:
-        game_id = entry[0]
-        game_ids += game_id + '\n'
-        eps += '%s\n' % (ep_list[game_id])
-        gps += '%s\n' % (gp_list[game_id])
-        prs += '%s\n' % (entry[1])
-
-    embed.add_field(name="游戏ID", value='>>> %s' % (game_ids))
-    embed.add_field(name="EP", value='>>> %s' % (eps))
-    embed.add_field(name="GP", value='>>> %s' % (gps))
-    embed.add_field(name="PR", value='>>> %s' % (prs))
+async def update_raider_view(target_source=None):
+    if (cfg.raider_msg is None):
+        cfg.raider_msg = await target_source.send(embed=raider_view_embed())
+    else:
+        await cfg.raider_msg.edit(embed=raider_view_embed())
