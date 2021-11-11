@@ -42,7 +42,7 @@ async def on_voice_state_update(member, before, after):
         print('%s joined server' % (member.name))
 
         for raider in cfg.raider_dict.values():
-            if raider.author_id == member.id & raider.in_raid == False:
+            if raider.author_id == member.id:
                 raider.in_raid = True
                 await view.update_admin_view()
                 await view.update_raider_view()
@@ -53,7 +53,7 @@ async def on_voice_state_update(member, before, after):
         print('%s left server' % (member.name))
 
         for raider in cfg.raider_dict.values():
-            if raider.author_id == member.id & raider.in_raid == True:
+            if raider.author_id == member.id:
                 raider.in_raid = False
                 await view.update_admin_view()
                 await view.update_raider_view()
