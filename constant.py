@@ -1,43 +1,32 @@
-# reg for message
+# reg for message command
 update_reg = "Update ([^ ]+)"
-admin_reg = "(Admin|a) .+"
-announcement_reg = "(Distribute|d) [a-z]+"
-
-start_new_raid_reg = "(Admin|a) start"
 add_new_member_reg = "(Admin|a) add .+"
-decay_reg = "(Admind|a) decay"
 adjust_reg = "(Admind|a) adjust .+"
-gbid_reg = "(Admind|a) gbid .+"
-standby_reg = "(Admind|a) standby .+"
-sync_epgp_from_gsheet_to_json = "(Admin|a) g2js pr"
-sync_loot_from_gsheet_to_json = "(Admin|a) g2js loot"
-load_epgp_from_json_to_memory = "(Admin|a) js2m pr"
-load_loot_from_json_to_memory = "(Admin|a) js2m loot"
-dump_epgp_from_memory_to_json = "(Admin|a) (write|w)"
-dump_loot_from_memory_to_json = "(Admin|a) m2js loot"
 
-# reg for button custom id
-loot_main_spec_confirm_id = "loot_main_spec_confirm"
-loot_off_spec_confirm_id = "loot_off_spec_confirm"
+# button custom id
+admin_cancel_id = 'admin_cancel_id'
+admin_confirm_id = 'admin_confirm_id'
 loot_main_spec_id = "loot_main_spec"
 loot_off_spec_id = "loot_off_spec"
-loot_cancel_id = "loot_cancel"
 
-reward_20_ep = 'reward_20'
-reward_150_ep = 'reward_150'
-reward_200_ep = 'reward_200'
+# menu custom id
+main_menu_id = 'main_menu'
+adjust_menu_id = 'adjust_menu'
+system_menu_id = 'system_menu'
+raider_operation_menu_id = 'raider_operation_menu'
+raider_menu_id = 'raider_menu'
+epgp_menu_id = 'epgp_menu'
+percentage_menu = 'percentage_menu'
+boss_menu_id = 'boss_menu'
+loot_menu_id = 'loot_menu'
 
 # common constant
 initial_gp = 1000
 decay_factor = 0.85
-update_message_button_response_type = 7
+edit_message_response_type = 7
 
 raid_channel = 849111061840003079
 loot_channel = 907482797579595806
-
-gp_off_spec_factor = 0.5
-gp_main_spec_factor = 1
-gp_gbid_factor = 0.2
 
 class_dict = {
     '战士': 1,
@@ -77,3 +66,29 @@ spec_dic = {
     '野性': 1,
     '平衡': 3,
 }
+
+loot_announcement_duration = 10
+
+adjust_operation_path = 'adjust_operation'
+system_operation_path = 'system_operation'
+loot_operation_path = 'loot_operation'
+raider_operation_path = 'raider_operation'
+
+standby_raider_path = 'standby_raider'
+
+loot_adjust_path = 'loot_adjust'
+reward_adjust_path = 'reward_adjust'
+manual_adjust_path = 'manual_adjust'
+decay_adjust_path = 'decay_adjust'
+
+epgp_path = 'epgp'
+
+raider_path = 'raider'
+
+boss_id_path = 'boss_id'
+
+loot_id_path = 'loot_id'
+
+percentage_path = 'percentage'
+
+system_path = 'system'

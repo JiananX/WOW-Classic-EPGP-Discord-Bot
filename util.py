@@ -1,6 +1,7 @@
 import cfg
 import constant
 import logging
+import re
 
 
 def get_ep(game_id):
@@ -57,3 +58,9 @@ def find_game_id(user_id):
             return raider.ID
 
     return None
+
+def build_admin_path(path, value):
+  return '-path %s -value %s'%(path, value)
+
+def is_match(reg, content):
+  return re.fullmatch(reg, content, re.IGNORECASE)

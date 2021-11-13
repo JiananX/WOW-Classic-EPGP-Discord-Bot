@@ -33,3 +33,4 @@ Coming feature
 4. logging for recover
 5. -r reason logging
 6. Alt management
+7. Raider.stand_by to Raider.standby
