@@ -28,7 +28,7 @@ async def _calculate_result(loot):
     factor = 0
     all_bis_class = []
     if len(loot.BIS) != 0:
-        for bis in loot.BIS.split(' '):
+        for bis in loot.BIS.strip().split(' '):
             if (len(bis) != 0):
                 all_bis_class.append(bis[len(bis) - 2])
 

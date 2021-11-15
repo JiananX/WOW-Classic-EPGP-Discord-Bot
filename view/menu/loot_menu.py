@@ -17,7 +17,7 @@ def boss_menu():
             SelectOption(label='%s' % (boss),
                          value=util.build_admin_path(constant.boss_id_path,
                                                      boss)))
-    return Select(custom_id=constant.boss_menu_id, options=options)
+    return [Select(custom_id=constant.boss_menu_id, options=options)]
 
 
 def loot_menu(boss):
@@ -33,4 +33,4 @@ def loot_menu(boss):
                          value=util.build_admin_path(constant.loot_id_path,
                                                      loot.NAME)))
 
-    return Select(custom_id=constant.loot_menu_id, options=options)
+    return [Select(custom_id=constant.loot_menu_id, options=options)]

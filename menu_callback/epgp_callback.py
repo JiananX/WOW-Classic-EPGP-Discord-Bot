@@ -9,8 +9,10 @@ def adjust_epgp():
     gp = 0
     percentage = 1
 
-    if cfg.admin_path_values.get(constant.raider_menu_id) is not None:
-        game_ids = cfg.admin_path_values[constant.raider_menu_id]
+    if cfg.admin_path_values.get(constant.raider_menu_id + '1') is not None:
+        game_ids = cfg.admin_path_values[constant.raider_menu_id + '1']
+    elif cfg.admin_path_values.get(constant.raider_menu_id + '2') is not None:
+        game_ids = cfg.admin_path_values[constant.raider_menu_id + '2']
     else:
         for raider in cfg.raider_dict.values():
             if ((raider.in_raid == True) & (raider.stand_by == False)):
@@ -28,7 +30,8 @@ def adjust_epgp():
         gp = cfg.loot_dict[cfg.admin_path_values[constant.loot_menu_id][0]].GP
 
     if cfg.admin_path_values.get('percentage') is not None:
-        percentage = float(cfg.admin_path_values[constant.percentage_menu_id][0])
+        percentage = float(
+            cfg.admin_path_values[constant.percentage_menu_id][0])
 
     for game_id in game_ids:
         util.set_ep(game_id, util.get_ep(game_id) + ep)

@@ -1,10 +1,8 @@
-from discord_components import ActionRow
-
 from view.embed.admin_embed import admin_embed_view
 from view.embed.loot_embed import loot_embed_view
 from view.embed.raider_embed import raider_embed_view
 
-from view.button.admin_button import admin_cancel_button, admin_confirm_button
+from view.button.admin_button import admin_cancel_button, admin_bundle_button
 from view.button.loot_button import loot_button
 
 from view.menu.epgp_menu import adjust_menu, epgp_menu, percentage_menu
@@ -19,9 +17,9 @@ import constant
 
 
 async def send_initial_message(admin_channel):
-    cfg.admin_msg = await admin_channel.send(
-        embed=admin_embed_view(),
-        components=[main_menu(), admin_cancel_button])
+    cfg.admin_msg = await admin_channel.send(embed=admin_embed_view(),
+                                             components=main_menu() +
+                                             admin_cancel_button)
 
     cfg.raider_msg = await cfg.loot_channel.send(embed=raider_embed_view())
 
@@ -29,29 +27,25 @@ async def send_initial_message(admin_channel):
 async def send_loot_message(loot):
     return await cfg.loot_channel.send(
         embed=loot_embed_view(loot),
-        components=[loot_button],
+        components=loot_button,
         delete_after=constant.loot_announcement_duration)
 
 
 async def update_admin_view():
     if (len(cfg.admin_path) == 0):
         await cfg.admin_msg.edit(embed=admin_embed_view(),
-                                 components=[main_menu(),
-                                             admin_cancel_button])
+                                 components=main_menu() + admin_cancel_button)
     else:
         next_menu = _find_next_menu()
 
         if (next_menu is not None):
-            await cfg.admin_msg.edit(
-                embed=admin_embed_view(),
-                components=[next_menu, admin_cancel_button])
+            await cfg.admin_msg.edit(embed=admin_embed_view(),
+                                     components=next_menu +
+                                     admin_cancel_button)
         else:
             # Do not response 7 for the final message, otherwise the message will be flushed
             await cfg.admin_msg.edit(embed=admin_embed_view(),
-                                     components=[
-                                         ActionRow(admin_confirm_button,
-                                                   admin_cancel_button)
-                                     ])
+                                     components=admin_bundle_button)
 
 
 async def update_raider_view():

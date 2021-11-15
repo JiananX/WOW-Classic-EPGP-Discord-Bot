@@ -12,6 +12,8 @@ from view.view import send_initial_message, update_admin_view, update_raider_vie
 
 from  emojis import emojis
 
+import wcl.wcl
+
 import asyncio
 import cfg
 import constant
@@ -202,4 +204,7 @@ def initialize_global_vars():
     cfg.loot_msg = 'No loot event yet'
 
 
-bot.run(discord_token)
+#bot.run(discord_token)
+wcl.wcl.query_basic_report("CfLZBJWwqxbmac36")
+#wcl.wcl.query_basic_report("bVGMz4ArFp3txHN1")
+wcl.wcl.send_out_res()

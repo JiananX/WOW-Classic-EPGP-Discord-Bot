@@ -42,10 +42,10 @@ def system_operation():
 
 
 def main_menu():
-    return Select(custom_id=constant.main_menu_id,
+    return [Select(custom_id=constant.main_menu_id,
                   options=[
                       distribute_operation(),
                       adjust_operation(),
                       raider_operation(),
                       system_operation()
-                  ])
+                  ])]
