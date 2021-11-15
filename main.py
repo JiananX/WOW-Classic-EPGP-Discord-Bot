@@ -204,7 +204,4 @@ def initialize_global_vars():
     cfg.loot_msg = 'No loot event yet'
 
 
-#bot.run(discord_token)
-wcl.wcl.query_basic_report("CfLZBJWwqxbmac36")
-#wcl.wcl.query_basic_report("bVGMz4ArFp3txHN1")
-wcl.wcl.send_out_res()
+bot.run(discord_token)
