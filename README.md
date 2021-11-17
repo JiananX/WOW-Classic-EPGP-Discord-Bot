@@ -29,7 +29,4 @@ $ deactivate
 Coming feature
 1. Loot count down
 2. Integrate Bid function
-3. Update button for 100% 20% reward
-4. logging for recover
-5. -r reason logging
 6. Alt management
