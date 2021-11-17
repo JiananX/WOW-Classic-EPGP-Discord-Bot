@@ -1,13 +1,14 @@
+from infra.gsheet import get_epgp_from_gsheet, get_loot_from_gsheet
+
 import cfg
-import gsheet
 import pandas as pd
 import json
 import raider
 import loot
 
-
-async def sync_epgp_from_gsheet_to_json(message):
-    epgp_from_gsheet = gsheet.get_epgp_from_gsheet()
+# Outdated
+def sync_epgp_from_gsheet_to_json():
+    epgp_from_gsheet = get_epgp_from_gsheet()
     df = pd.DataFrame.from_dict(epgp_from_gsheet)
     raiders = []
     for index, row in df.iterrows():
@@ -18,22 +19,20 @@ async def sync_epgp_from_gsheet_to_json(message):
     jstr = json.dumps([ob.__dict__ for ob in raiders])
     with open('epgp.json', 'w') as outfile:
         outfile.write(jstr)
-    await message.author.send('从google sheet中导入epgp.json成功')
 
-
-async def sync_loot_from_gsheet_to_json(message):
-    loot_from_gsheet = gsheet.get_loot_from_gsheet()
+# Outdated
+def sync_loot_from_gsheet_to_json():
+    loot_from_gsheet = get_loot_from_gsheet()
     df = pd.DataFrame.from_dict(loot_from_gsheet)
     loots = []
     for index, row in df.iterrows():
-        l = loot.Loot(row['ID'], row['NAME'], row['GP'], row['BIS'])
+        l = loot.Loot(row['NAME'], row['GP'], row['BIS'], row['BOSS'])
         cfg.loot_dict[row['ID']] = l
         print(l)
         loots.append(l)
     jstr = json.dumps([ob.__dict__ for ob in loots])
     with open('loot.json', 'w') as outfile:
         outfile.write(jstr)
-    await message.author.send('从google sheet中导入loot.json成功')
 
 
 def load_epgp_from_json_to_memory():
@@ -41,11 +40,9 @@ def load_epgp_from_json_to_memory():
         json_data = infile.read()
     raiders = json.loads(json_data)
     for index, value in enumerate(raiders):
-        r = raider.Raider(raiders[index]['ID'], raiders[index]['EP'],
-                          raiders[index]['GP'], raiders[index]['in_raid'],
-                          raiders[index]['stand_by'], raiders[index]['author'],
-                          raiders[index]['author_id'])
-        cfg.raider_dict[raiders[index]['ID']] = r
+        r = raider.Raider(raiders[index]['name'],raiders[index]['ep'],
+                          raiders[index]['gp'], raiders[index]['user_id'])
+        cfg.raider_dict[raiders[index]['name']] = r
 
 
 def load_loot_from_json_to_memory():
@@ -53,35 +50,26 @@ def load_loot_from_json_to_memory():
         json_data = infile.read()
     loots = json.loads(json_data)
     for index, value in enumerate(loots):
-        l = loot.Loot(loots[index]['ID'], loots[index]['NAME'],
-                      loots[index]['GP'], loots[index]['BIS'])
-        cfg.loot_dict[loots[index]['ID']] = l
+        l = loot.Loot(loots[index]['name'],
+                      loots[index]['gp'], loots[index]['bis'],
+                      loots[index]['boss'])
+        cfg.loot_dict[loots[index]['name']] = l
 
 
-async def dump_epgp_from_memory_to_json(message):
-    # raider_dict can be empty only the raid is not started.
-    if (len(cfg.raider_dict) == 0):
-        await message.author.send(
-            'Please start a raid session to add new raid member')
-        return
-
+def dump_epgp_from_memory_to_json():
     raiders = []
     for value in cfg.raider_dict.values():
         raiders.append(value)
     jstr = json.dumps([{
-        'ID': ob.ID,
-        'EP': ob.EP,
-        'GP': ob.GP,
-        'PR': round(ob.EP/ob.GP, 3),
-        'in_raid': ob.in_raid,
-        'stand_by': ob.stand_by,
-        'author': str(ob.author),
-        'author_id': ob.author_id
-    } for ob in raiders], indent=4)
+        'name': ob.name,
+        'ep': ob.ep,
+        'gp': ob.gp,
+        'pr': round(ob.ep / ob.gp, 3),
+        'user_id': ob.user_id
+    } for ob in raiders],
+                      indent=4)
     with open('epgp.json', 'w') as outfile:
         outfile.write(jstr)
-
-    await message.channel.send('EPGP write back to json successfully')
 
 
 def dump_loot_from_memory_to_json():

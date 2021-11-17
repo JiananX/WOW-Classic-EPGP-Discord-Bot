@@ -1,14 +1,16 @@
-'''管理相关'''
-global admin
-global stamp
 global raider_dict
 global loot_dict
-'''分配相关'''
+global emojis_dict
+
 global main_spec
 global off_spec
-global current_loot
-global current_winner
-global loot_message
-'''Global Message Object'''
-global raid_user_msg
+
+global loot_channel
+global raider_channel
 global admin_msg
+global raider_msg
+
+global admin_path
+global admin_path_values
+
+global event_msg

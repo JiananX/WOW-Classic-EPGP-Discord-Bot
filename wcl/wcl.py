@@ -1,15 +1,31 @@
-from wcl.wcl_object import ReportCharacter, Fight, FightEvent
-from wcl.query import basic_report_query, event_query, death_query
+from wcl.wcl_object import Fight, FightEvent
+from wcl.query import basic_report_query, event_query, death_query, find_latest_report
 
 import math
 import json
 import requests
+import time
+
+# 28499: 大蓝
+# 41617: 毒蛇大蓝
+# 41617: 要塞大蓝
+# 28508: 毁灭药水
+# 28507: 加速药水
+# 28714: 烈焰菇
+# 27869: 黑暗符文
+# 17528: 强效怒气药水
+# 28495: 治疗药水
+# 28515: 铁盾药水
+tracking_spell_id = [
+    28499, 41617, 41618, 28508, 28507, 28714, 27869, 17528, 28495, 28515
+]
 
 token = None
+
 report_fights = {}
-report_characters = {}
-report_potion_usage = {}
+report_players = set()
 report_deaths = {}
+report_potion_usage = {}
 
 
 def initilization():
@@ -33,116 +49,107 @@ def query_basic_report(code):
     if (token == None):
         initilization()
 
+    # code = _send_gql_request(find_latest_report(round(time.time() * 1000)-604800000
+    # ))
+    #["data"]["reportData"]["reports"]["data"][0]['code']
+
     result = _send_gql_request(
         basic_report_query(code))["data"]["reportData"]["report"]
 
-    current_fights = result["fights"]
-    for idx, fight in enumerate(current_fights):
+    current_players = {}
+    current_fights = {}
+    for player in result["masterData"]["actors"]:
+        if (player['subType'] != 'Unknown'):
+            report_players.add(player['name'])
+
+            current_players.update({player["id"]: player['name']})
+
+    for fight in result["fights"]:
+        all_player_names = []
+
+        for player_id in fight['friendlyPlayers']:
+            all_player_names.append(current_players[player_id])
+
         report_fights.update({
-            fight["id"]:
+            fight["name"]:
             Fight(fight["id"], fight['name'], fight["startTime"],
-                  fight["endTime"], fight['friendlyPlayers'])
+                  fight["endTime"], all_player_names)
+        })
+        current_fights.update({
+            fight["name"]:
+            Fight(fight["id"], fight['name'], fight["startTime"],
+                  fight["endTime"], all_player_names)
         })
 
-    current_character = result["masterData"]["actors"]
-    for idx, character in enumerate(current_character):
-        if (character['subType'] != 'Unknown'):
-            report_characters.update({
-                character["id"]:
-                ReportCharacter(character["id"], character['name'])
-            })
+    for fight in current_fights.values():
+        #print(fight.NAME)
+        # Assume the events are in the time order
+        deaths = _send_gql_request(death_query(
+            code, fight))["data"]["reportData"]["report"]["events"]["data"]
+
+        fight_deaths = {}
+        for death in deaths:
+            fight_deaths.update(
+                {current_players[death["targetID"]]: death["timestamp"]})
+
+        report_deaths.update({fight.fight_name: fight_deaths})
+
+        tracking_events = []
+        for spell_id in tracking_spell_id:
+            result = _send_gql_request(event_query(
+                code, fight,
+                spell_id))["data"]["reportData"]["report"]["events"]["data"]
+            for event in result:
+                tracking_events.append(
+                    FightEvent(current_players[event["sourceID"]],
+                               event["abilityGameID"]))
+
+        potion_dic = {}
+        for event in tracking_events:
+            if (potion_dic.get(event.player_name) == None):
+                potion_dic.update({event.player_name: 1})
+            else:
+                potion_dic[event.player_name] += 1
+
+        report_potion_usage.update({fight.fight_name: potion_dic})
+
+
+def send_out_res():
     res = ''
-
-    # (TODO) Consider remove this with other feature
     for fight in report_fights.values():
-        res += fight.NAME + ' '
+        time_overlap = fight.end_time - fight.start_time
+        res += '%s(%s分钟),' % (
+            fight.fight_name, round(time_overlap / 60000.0, 3), )
 
-        if (report_potion_usage.get(fight.NAME) == None):
-            print(fight.NAME)
-            deaths = _send_gql_request(
-                death_query(code, report_fights[fight.ID])
-            )["data"]["reportData"]["report"]["events"]["data"]
-            cur_deaths = {}
-            # (TODO) Conside 战斗复活、诈尸、灵魂石
-            for death in deaths:
-                cur_deaths.update({death["targetID"]: death["timestamp"]})
-
-            report_deaths.update({fight.NAME: cur_deaths})
-            query_brust_and_mana_potion(code, fight.ID)
     res += '\n'
-
-    for character in report_characters.values():
-        res += character.NAME + ' '
-
+    for player in report_players:
+        res += player + ' '
         for fight in report_fights.values():
-            potion_usage = report_potion_usage[fight.NAME]
-            if (character.ID not in fight.PLAYERS):
+            potion_usage = report_potion_usage[fight.fight_name]
+
+            if (player not in fight.player_names):
                 res += 'X '
             else:
-                time_overlap = fight.ENDTIME - fight.STARTTIME
-                # give 0.15 minutes as buffer e.g. 6: 03
-                expectation = math.floor((time_overlap / 60000.0 - 0.15) / 2)
-                if (character.ID in report_deaths[fight.NAME].keys()):
-                    time_overlap = report_deaths[fight.NAME][
-                        character.ID] - fight.STARTTIME
-                    expectation = math.floor(time_overlap / 60000.0 / 2)
-                    expectation = '[%s]' % (expectation)
+                actual = 0
+                if (potion_usage.get(player) != None):
+                    actual = potion_usage[player]
 
-                if (potion_usage.get(character.NAME) == None):
-                    res += '0/%s ' % (expectation)
+                
+                if (player in report_deaths[fight.fight_name].keys()):
+                    res += '[%s]'%(actual)
                 else:
-                    res += str(potion_usage[character.NAME]) + '/' + str(
-                        expectation) + ' '
+                  res += str(actual)
+                
+                res += ' '
 
         res += '\n'
 
     print(res)
 
 
-def query_brust_and_mana_potion(code, fight_id):
-    if (token == None):
-        initilization()
-
-    if (report_fights.get(fight_id) == None):
-        return
-    # 28499: 大蓝
-    # 41617: 毒蛇大蓝
-    # 41617: 要塞大蓝
-    # 28508: 毁灭药水
-    # 28507: 加速药水
-    # 28714: 烈焰菇
-    # 27869: 黑暗符文
-    # 17528: 强效怒气药水
-    # 28495: 治疗药水
-    # 28515: 铁盾药水
-    tracking_spell_id = [
-        28499, 41617, 41618, 28508, 28507, 28714, 27869, 17528, 28495, 28515
-    ]
-
-    tracking_events = []
-    for spell_id in tracking_spell_id:
-        result = _send_gql_request(
-            event_query(
-                code, report_fights[fight_id],
-                spell_id))["data"]["reportData"]["report"]["events"]["data"]
-        for event in result:
-            tracking_events.append(
-                FightEvent(event["sourceID"], event["abilityGameID"]))
-
-    potion_dic = {}
-    for event in tracking_events:
-        game_id = report_characters[event.ACTOR_ID].NAME
-        if (potion_dic.get(game_id) == None):
-            potion_dic.update({game_id: 1})
-        else:
-            potion_dic[game_id] += 1
-
-    report_potion_usage.update({report_fights[fight_id].NAME: potion_dic})
-
-
 def _send_gql_request(query):
-    response = requests.post(
-        "https://cn.classic.warcraftlogs.com/api/v2/client",
-        headers={"authorization": f"Bearer {token}"},
-        json={"query": query})
+    # Why cn cannot working API nmot working
+    response = requests.post("https://classic.warcraftlogs.com/api/v2/client",
+                             headers={"authorization": f"Bearer {token}"},
+                             json={"query": query})
     return response.json()

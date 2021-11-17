@@ -1,3 +1,17 @@
+def find_latest_report(startTime):
+    return '''
+            {
+              reportData {
+                reports(userID: 1493123, limit: 1, startTime: %s) {
+                  data {
+                    startTime
+                    code
+                  }
+                }
+              }
+            }
+            ''' %(startTime)
+
 def basic_report_query(code):
     return '''
             {
@@ -34,7 +48,7 @@ def event_query(code, fight, spell_id):
                 }
               }
             }
-            ''' % (code, fight.ID, fight.STARTTIME, fight.ENDTIME, spell_id)
+            ''' % (code, fight.fight_id, fight.start_time, fight.end_time, spell_id)
 
 
 def death_query(code, fight):
@@ -48,4 +62,4 @@ def death_query(code, fight):
                 }
               }
             }
-            ''' % (code, fight.ID, fight.STARTTIME, fight.ENDTIME)
+            ''' % (code, fight.fight_id, fight.start_time, fight.end_time)
