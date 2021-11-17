@@ -3,12 +3,14 @@ import constant
 
 
 def standby():
-    game_ids = []
+    raider_names = []
     if cfg.admin_path_values.get(constant.raider_menu_id + '1') is not None:
-        game_ids = cfg.admin_path_values[constant.raider_menu_id + '1']
+        raider_names = cfg.admin_path_values[constant.raider_menu_id + '1']
     elif cfg.admin_path_values.get(constant.raider_menu_id + '2') is not None:
-        game_ids = cfg.admin_path_values[constant.raider_menu_id + '2']
+        raider_names = cfg.admin_path_values[constant.raider_menu_id + '2']
 
     for raider in cfg.raider_dict.values():
-        if raider.ID in game_ids:
-            raider.stand_by = True
+        if raider.name in raider_names:
+            raider.standby = True
+    
+    cfg.event_msg = 'Standby successfully'

@@ -1,4 +1,4 @@
 {
-    "admin_token":"",
-    "discord_token":""
+  "discord_token": "",
+  "admin_user_id": ""
 }

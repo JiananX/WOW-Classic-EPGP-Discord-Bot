@@ -28,10 +28,11 @@ dump_loot_from_memory_to_json = SelectOption(
     value=util.build_admin_path(constant.system_path,
                                 'dump_loot_from_memory_to_json'))
 
-system_menu = [Select(
-    custom_id=constant.system_menu_id,
-    options=[
-        sync_epgp_from_gsheet_to_json, sync_loot_from_gsheet_to_json,
-        load_epgp_from_json_to_memory, load_loot_from_json_to_memory,
-        dump_epgp_from_memory_to_json, dump_loot_from_memory_to_json
-    ])]
+system_menu = [
+    Select(custom_id=constant.system_menu_id,
+           options=[
+               sync_epgp_from_gsheet_to_json, sync_loot_from_gsheet_to_json,
+               load_epgp_from_json_to_memory, load_loot_from_json_to_memory,
+               dump_epgp_from_memory_to_json, dump_loot_from_memory_to_json
+           ])
+]

@@ -14,4 +14,6 @@ admin_confirm_button = [
            style=ButtonStyle.blue)
 ]
 
-admin_bundle_button = [ActionRow(admin_confirm_button[0], admin_cancel_button[0])]
+admin_bundle_button = [
+    ActionRow(admin_confirm_button[0], admin_cancel_button[0])
+]

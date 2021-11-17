@@ -1,5 +1,5 @@
 from view.embed.admin_embed import admin_embed_view
-from view.embed.loot_embed import loot_embed_view
+from view.embed.loot_embed import loot_embed_view, loot_result_embed_view
 from view.embed.raider_embed import raider_embed_view
 
 from view.button.admin_button import admin_cancel_button, admin_bundle_button
@@ -16,18 +16,29 @@ import cfg
 import constant
 
 
-async def send_initial_message(admin_channel):
-    cfg.admin_msg = await admin_channel.send(embed=admin_embed_view(),
-                                             components=main_menu() +
-                                             admin_cancel_button)
+async def send_initial_message():
+    cfg.admin_msg = await cfg.admin_channel.send(embed=admin_embed_view(),
+                                                 components=main_menu() +
+                                                 admin_cancel_button)
 
-    cfg.raider_msg = await cfg.loot_channel.send(embed=raider_embed_view())
+    cfg.raider_msg = await cfg.raider_channel.send(embed=raider_embed_view())
 
 
 async def send_loot_message(loot):
-    return await cfg.loot_channel.send(
+    await cfg.raider_channel.send(
         embed=loot_embed_view(loot),
         components=loot_button,
+        delete_after=constant.loot_announcement_duration)
+
+    await cfg.admin_channel.send(
+        embed=loot_embed_view(loot),
+        components=loot_button,
+        delete_after=constant.loot_announcement_duration)
+
+
+async def send_loot_result_message(loot, winner_user_id):
+    await cfg.raider_channel.send(
+        embed=loot_result_embed_view(loot, winner_user_id),
         delete_after=constant.loot_announcement_duration)
 
 
@@ -43,7 +54,6 @@ async def update_admin_view():
                                      components=next_menu +
                                      admin_cancel_button)
         else:
-            # Do not response 7 for the final message, otherwise the message will be flushed
             await cfg.admin_msg.edit(embed=admin_embed_view(),
                                      components=admin_bundle_button)
 

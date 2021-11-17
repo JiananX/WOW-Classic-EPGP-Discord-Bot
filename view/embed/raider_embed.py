@@ -9,7 +9,7 @@ def raider_embed_view():
     all_raiders = {}
     for raider in cfg.raider_dict.values():
         if (raider.in_raid == True):
-            all_raiders.update({raider: util.calculate_pr(raider.ID)})
+            all_raiders.update({raider: util.calculate_pr(raider.name)})
 
     # return List of key-value tuple/pair entry
     sorted_pr_list = sorted(all_raiders.items(),
@@ -18,8 +18,8 @@ def raider_embed_view():
 
     for entry in sorted_pr_list:
         raider = entry[0]
-        embed.add_field(name=raider.ID,
+        embed.add_field(name=raider.name,
                         value='> EP:%s GP:%s, PR:%s' %
-                        (raider.EP, raider.GP, entry[1]))
+                        (raider.ep, raider.gp, entry[1]))
 
     return embed

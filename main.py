@@ -1,6 +1,6 @@
 from discord_components import ComponentsBot
 
-from command.admin_command import add_new_member,adjust
+from command.admin_command import add_new_member, adjust
 from command.raider_command import update_user_id
 
 from infra.source import load_loot_from_json_to_memory, load_epgp_from_json_to_memory
@@ -10,64 +10,62 @@ from menu_callback.menu_callback import all_paths_callback
 from view.menu.menu import all_paths
 from view.view import send_initial_message, update_admin_view, update_raider_view
 
-from  emojis import emojis
-
-import wcl.wcl
+from emojis import emojis
 
 import asyncio
 import cfg
 import constant
 import discord
+import history
 import json
 import re
 import util
 
 bot = ComponentsBot('?')
-util.start_logger()
+history.start_logger()
 
-admin_tokens = None
 discord_token = None
+admin_user_id = None
 with open('local_settings.json') as infile:
     data = json.load(infile)
-    admin_tokens = data['admin_token']
     discord_token = data['discord_token']
+    admin_user_id = int(data['admin_user_id'])
+
+cfg.raider_dict = {}
+cfg.loot_dict = {}
+cfg.emojis_dict = {}
+
+cfg.admin_path = []
+cfg.admin_path_values = {}
+
+cfg.event_msg = 'No event yet'
 
 
 @bot.event
 async def on_ready():
-    initialize_global_vars()
-
     load_loot_from_json_to_memory()
     load_epgp_from_json_to_memory()
 
-    # Reset some of the fields read from source
-    for raider in cfg.raider_dict.values():
-        raider.in_raid = False
-        raider.stand_by = False
+    cfg.raider_channel = await bot.fetch_channel(constant.loot_channel)
+    cfg.admin_channel = await bot.fetch_user(admin_user_id)
 
-    cfg.loot_channel = await bot.fetch_channel(constant.loot_channel)
-
-    raid_voice_channel = bot.get_channel(constant.raid_channel)
-
-    admin_channel = await bot.fetch_user(723015651932897312)
-
+    raid_voice_channel = await bot.fetch_channel(constant.raid_channel)
     for member_id in raid_voice_channel.voice_states.keys():
         for name, raider in cfg.raider_dict.items():
-            if raider.author_id == member_id:
+            if raider.user_id == member_id:
                 raider.in_raid = True
 
-    async for message in cfg.loot_channel.history():
+    async for message in cfg.raider_channel.history():
         await message.delete()
 
-    async for message in admin_channel.history():
-        if message.author.id != 723015651932897312:
+    async for message in cfg.admin_channel.history():
+        if message.author.id != admin_user_id:
             await message.delete()
 
-    
     for name, id in emojis.items():
-      cfg.emojis_dict.update({name: bot.get_emoji(id)})
+        cfg.emojis_dict.update({name: bot.get_emoji(id)})
 
-    await send_initial_message(admin_channel)
+    await send_initial_message()
 
     print('CF Senior EPGP start')
 
@@ -84,8 +82,10 @@ async def on_voice_state_update(member, before, after):
         print('%s joined server' % (member.name))
 
         for raider in cfg.raider_dict.values():
-            if raider.author_id == member.id:
+            if raider.user_id == member.id:
                 raider.in_raid = True
+                await update_admin_view()
+                await update_raider_view()
                 break
     elif ((new_channel is None or new_channel.id != constant.raid_channel)
           and (before_channel is not None)
@@ -93,8 +93,10 @@ async def on_voice_state_update(member, before, after):
         print('%s left server' % (member.name))
 
         for raider in cfg.raider_dict.values():
-            if raider.author_id == member.id:
+            if raider.user_id == member.id:
                 raider.in_raid = False
+                await update_admin_view()
+                await update_raider_view()
                 break
 
 
@@ -107,19 +109,11 @@ async def on_message(message):
         return
 
     if (util.is_match(constant.add_new_member_reg, message.content)):
-        if (str(message.author) not in admin_tokens):
-            await message.channel.send('You are not admin')
-            return
-
         await add_new_member(message)
-    
-    if (util.is_match(constant.adjust_reg, message.content)):
-        if (str(message.author) not in admin_tokens):
-            await message.channel.send('You are not admin')
-            return
 
+    if (util.is_match(constant.adjust_reg, message.content)):
         await adjust(message)
-    
+
     if (util.is_match(constant.update_reg, message.content)):
         await update_user_id(message)
 
@@ -140,7 +134,7 @@ async def on_button_click(interaction):
             cfg.main_spec.append(user_id)
         elif (custom_id == constant.loot_off_spec_id):
             cfg.off_spec.append(interaction.user.id)
-        
+
         # TODO: Consider response with another response type other than edit message
         await interaction.respond(type=constant.edit_message_response_type)
     elif (custom_id.startswith('admin')):
@@ -152,7 +146,8 @@ async def on_button_click(interaction):
             if (cfg.admin_path_values[constant.main_menu_id][0] ==
                     'announce_loot_to_raider'):
                 # Due to the task could start after the admin_path is cleared, so we wil need to pass the proper loot it
-                cfg.loot_msg = 'distributing %s' %(cfg.admin_path_values[constant.loot_menu_id][0])
+                cfg.loot_msg = 'distributing %s' % (
+                    cfg.admin_path_values[constant.loot_menu_id][0])
                 asyncio.create_task(
                     callback(cfg.admin_path_values[constant.loot_menu_id][0]))
             else:
@@ -185,23 +180,6 @@ async def on_select_option(interaction):
     await update_admin_view()
 
     await interaction.respond(type=constant.edit_message_response_type)
-
-
-def initialize_global_vars():
-    cfg.raider_dict = {}
-    cfg.loot_dict = {}
-    cfg.emojis_dict = {}
-
-    cfg.main_spec = []
-    cfg.off_spec = []
-
-    cfg.admin_msg = None
-    cfg.raider_msg = None
-
-    cfg.admin_path = []
-    cfg.admin_path_values = {}
-
-    cfg.loot_msg = 'No loot event yet'
 
 
 bot.run(discord_token)

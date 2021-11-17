@@ -10,11 +10,11 @@ def admin_embed_view():
     for raider in cfg.raider_dict.values():
         if (raider.in_raid == True):
             total_raider += 1
-        if (raider.stand_by == True):
-            standby_raider += '%s\n'%(raider.ID)
+        if (raider.standby == True):
+            standby_raider += '%s\n' % (raider.name)
 
     if (len(standby_raider) == 0):
-      standby_raider = 'Nobody'
+        standby_raider = 'Nobody'
 
     embed.add_field(name='Total Count',
                     value='> %s' % (total_raider),
@@ -26,19 +26,16 @@ def admin_embed_view():
 
     operation_event = ''
     for menu_id, values in cfg.admin_path_values.items():
-      operation_event += '%s:  %s\n' %(menu_id, values);
-    
+        operation_event += '%s:  %s\n' % (menu_id, values)
+
     if (len(operation_event) == 0):
-      operation_event = 'No events'
+        operation_event = 'No events'
     embed.add_field(name='Operation events',
-                value='>>> %s' % (operation_event),
-                inline=False)
+                    value='>>> %s' % (operation_event),
+                    inline=False)
 
-    
-    embed.add_field(name='Loot events',
-                value='>>> %s' % (cfg.loot_msg),
-                inline=False)
-    
-
+    embed.add_field(name='Event Message',
+                    value='>>> %s' % (cfg.event_msg),
+                    inline=False)
 
     return embed

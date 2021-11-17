@@ -6,7 +6,7 @@ import json
 import raider
 import loot
 
-
+# Outdated
 def sync_epgp_from_gsheet_to_json():
     epgp_from_gsheet = get_epgp_from_gsheet()
     df = pd.DataFrame.from_dict(epgp_from_gsheet)
@@ -20,14 +20,13 @@ def sync_epgp_from_gsheet_to_json():
     with open('epgp.json', 'w') as outfile:
         outfile.write(jstr)
 
-
+# Outdated
 def sync_loot_from_gsheet_to_json():
     loot_from_gsheet = get_loot_from_gsheet()
     df = pd.DataFrame.from_dict(loot_from_gsheet)
     loots = []
     for index, row in df.iterrows():
-        l = loot.Loot(row['ID'], row['NAME'], row['GP'], row['BIS'],
-                      row['BOSS'])
+        l = loot.Loot(row['NAME'], row['GP'], row['BIS'], row['BOSS'])
         cfg.loot_dict[row['ID']] = l
         print(l)
         loots.append(l)
@@ -41,11 +40,9 @@ def load_epgp_from_json_to_memory():
         json_data = infile.read()
     raiders = json.loads(json_data)
     for index, value in enumerate(raiders):
-        r = raider.Raider(raiders[index]['ID'], raiders[index]['EP'],
-                          raiders[index]['GP'], raiders[index]['in_raid'],
-                          raiders[index]['stand_by'], raiders[index]['author'],
-                          raiders[index]['author_id'])
-        cfg.raider_dict[raiders[index]['ID']] = r
+        r = raider.Raider(raiders[index]['name'],raiders[index]['ep'],
+                          raiders[index]['gp'], raiders[index]['user_id'])
+        cfg.raider_dict[raiders[index]['name']] = r
 
 
 def load_loot_from_json_to_memory():
@@ -53,10 +50,10 @@ def load_loot_from_json_to_memory():
         json_data = infile.read()
     loots = json.loads(json_data)
     for index, value in enumerate(loots):
-        l = loot.Loot(loots[index]['ID'], loots[index]['NAME'],
-                      loots[index]['GP'], loots[index]['BIS'],
-                      loots[index]['BOSS'])
-        cfg.loot_dict[loots[index]['NAME']] = l
+        l = loot.Loot(loots[index]['name'],
+                      loots[index]['gp'], loots[index]['bis'],
+                      loots[index]['boss'])
+        cfg.loot_dict[loots[index]['name']] = l
 
 
 def dump_epgp_from_memory_to_json():
@@ -64,14 +61,11 @@ def dump_epgp_from_memory_to_json():
     for value in cfg.raider_dict.values():
         raiders.append(value)
     jstr = json.dumps([{
-        'ID': ob.ID,
-        'EP': ob.EP,
-        'GP': ob.GP,
-        'PR': round(ob.EP / ob.GP, 3),
-        'in_raid': ob.in_raid,
-        'stand_by': ob.stand_by,
-        'author': str(ob.author),
-        'author_id': ob.author_id
+        'name': ob.name,
+        'ep': ob.ep,
+        'gp': ob.gp,
+        'pr': round(ob.ep / ob.gp, 3),
+        'user_id': ob.user_id
     } for ob in raiders],
                       indent=4)
     with open('epgp.json', 'w') as outfile:

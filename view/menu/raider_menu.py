@@ -15,23 +15,51 @@ raider_operation_menu = [
 ]
 
 
-# TODO: Need to support more than 25 raiders, or 0 raiders
 def raider_menu():
-    # based on different config build different raider list
     raiders = []
-    for raider in cfg.raider_dict.values():
-        if ((raider.in_raid == True) & (raider.stand_by == False)):
+    if (cfg.admin_path_values.get(
+            constant.adjust_menu_id) == ['manual_adjust_ep_gp']):
+        for raider in cfg.raider_dict.values():
             raiders.append(raider)
+    else:
+        for raider in cfg.raider_dict.values():
+            if (raider.in_raid == True and raider.standby == False):
+                raiders.append(raider)
+
+    raiders = sorted(raiders, key=lambda x: x.name)
+    if (len(raiders) == 0):
+        return []
 
     options = []
-
     for raider in raiders:
         options.append(
-            SelectOption(label='%s' % (raider.ID),
+            SelectOption(label='%s' % (raider.name),
                          value=util.build_admin_path(constant.raider_path,
-                                                     raider.ID)))
+                                                     raider.name)))
 
-    return [
-        Select(custom_id=constant.raider_menu_id + '1', options=options),
-        Select(custom_id=constant.raider_menu_id + '2', options=options)
-    ]
+    if (len(raiders) <= 25):
+        return [
+            Select(placeholder='All Raider',
+                   custom_id=constant.raider_menu_id + '1',
+                   options=options,
+                   max_values=len(raiders)),
+        ]
+    else:
+        splice_index = 0
+
+        for raider in raiders:
+            if raider.name.startswith('N'):
+                break
+            else:
+                splice_index += 1
+
+        return [
+            Select(placeholder='A - M',
+                   custom_id=constant.raider_menu_id + '1',
+                   options=options[:splice_index],
+                   max_values=len(options[:splice_index])),
+            Select(placeholder='N - Z',
+                   custom_id=constant.raider_menu_id + '2',
+                   options=options[splice_index:],
+                   max_values=len(options[splice_index:]))
+        ]

@@ -38,24 +38,34 @@ def percentage_option(percentage):
                                                     str(percentage)))
 
 
-adjust_menu = [Select(custom_id=constant.adjust_menu_id,
-                     options=[
-                         reward_operation, manual_operation, loot_operation,
-                         decay_operation
-                     ])]
+adjust_menu = [
+    Select(custom_id=constant.adjust_menu_id,
+           options=[
+               reward_operation, manual_operation, loot_operation,
+               decay_operation
+           ])
+]
 
-epgp_menu = [Select(custom_id=constant.epgp_menu_id,
-                   options=[
-                       ep_option(20),
-                       ep_option(100),
-                       ep_option(200),
-                       gp_option(100),
-                       gp_option(200),
-                   ])]
-percentage_menu = [Select(custom_id=constant.percentage_menu,
-                         options=[
-                             percentage_option(0.1),
-                             percentage_option(0.2),
-                             percentage_option(0.5),
-                             percentage_option(1),
-                         ])]
+epgp_menu = [
+    Select(custom_id=constant.epgp_menu_id,
+           options=[
+               ep_option(20),
+               ep_option(100),
+               ep_option(150),
+               ep_option(200),
+               ep_option(300),
+               ep_option(-100),
+               ep_option(-200),
+               gp_option(100),
+               gp_option(200),
+           ])
+]
+percentage_menu = [
+    Select(custom_id=constant.percentage_menu,
+           options=[
+               percentage_option(0.1),
+               percentage_option(0.2),
+               percentage_option(0.5),
+               percentage_option(1),
+           ])
+]

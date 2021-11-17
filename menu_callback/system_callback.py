@@ -19,3 +19,5 @@ def on_system_operation_callback():
         dump_epgp_from_memory_to_json()
     elif (system_operation == 'dump_loot_from_memory_to_json'):
         dump_loot_from_memory_to_json()
+    
+    cfg.event_msg = 'System operation is finished successfully'

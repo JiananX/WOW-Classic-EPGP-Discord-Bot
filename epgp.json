@@ -1,321 +1,240 @@
 [
     {
-        "ID": "Hunterbear",
-        "EP": 6436,
-        "GP": 2117,
-        "PR": 3.04,
-        "in_raid": true,
-        "stand_by": false,
-        "author": "justinLu#1445",
-        "author_id": 245238424401870848
+        "name": "Hunterbear",
+        "ep": 5640,
+        "gp": 1799,
+        "pr": 3.135,
+        "user_id": 245238424401870848
     },
     {
-        "ID": "Bluemages",
-        "EP": 8075,
-        "GP": 3820,
-        "PR": 2.114,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "Bluemage#3064",
-        "author_id": 348190654448271360
+        "name": "Bluemages",
+        "ep": 7033,
+        "gp": 3247,
+        "pr": 2.166,
+        "user_id": 348190654448271360
     },
     {
-        "ID": "Ameko",
-        "EP": 7319,
-        "GP": 935,
-        "PR": 7.828,
-        "in_raid": true,
-        "stand_by": false,
-        "author": "mario1118#9288",
-        "author_id": 871328894194688032
+        "name": "Ameko",
+        "ep": 6221,
+        "gp": 794,
+        "pr": 7.835,
+        "user_id": 871328894194688032
     },
     {
-        "ID": "Bansheegd",
-        "EP": 8672,
-        "GP": 3080,
-        "PR": 2.816,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "Crazycat#9710",
-        "author_id": 511342012151103488
+        "name": "Bansheegd",
+        "ep": 7371,
+        "gp": 2618,
+        "pr": 2.816,
+        "user_id": 511342012151103488
     },
     {
-        "ID": "Ramblerson",
-        "EP": 7395,
-        "GP": 3950,
-        "PR": 1.872,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "\u4f60\u5c31\u53eb\u6211\u5c0f\u738b\u53ed#8130",
-        "author_id": 856113644303548426
+        "name": "Ramblerson",
+        "ep": 6285,
+        "gp": 3357,
+        "pr": 1.872,
+        "user_id": 856113644303548426
     },
     {
-        "ID": "Ismehaha",
-        "EP": 8652,
-        "GP": 3923,
-        "PR": 2.205,
-        "in_raid": true,
-        "stand_by": false,
-        "author": "ismehaha#5690",
-        "author_id": 877465208594001940
+        "name": "Ismehaha",
+        "ep": 7439,
+        "gp": 3334,
+        "pr": 2.231,
+        "user_id": 877465208594001940
     },
     {
-        "ID": "Norva",
-        "EP": 7701,
-        "GP": 2990,
-        "PR": 2.576,
-        "in_raid": true,
-        "stand_by": false,
-        "author": "Carboo/Norva#7252",
-        "author_id": 243973585700388864
+        "name": "Norva",
+        "ep": 6630,
+        "gp": 2541,
+        "pr": 2.609,
+        "user_id": 243973585700388864
     },
     {
-        "ID": "Nons",
-        "EP": 8683,
-        "GP": 1338,
-        "PR": 6.49,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "nons#4271",
-        "author_id": 383464553402466304
+        "name": "Nons",
+        "ep": 7550,
+        "gp": 1137,
+        "pr": 6.64,
+        "user_id": 383464553402466304
     },
     {
-        "ID": "Spoond",
-        "EP": 8746,
-        "GP": 2920,
-        "PR": 2.995,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "spoonxin#8635",
-        "author_id": 633471199241961493
+        "name": "Spoond",
+        "ep": 7604,
+        "gp": 2482,
+        "pr": 3.064,
+        "user_id": 633471199241961493
     },
     {
-        "ID": "Keliderstoll",
-        "EP": 7448,
-        "GP": 1275,
-        "PR": 5.842,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "Keliderstol#6177",
-        "author_id": 161245615915925504
+        "name": "Keliderstoll",
+        "ep": 6500,
+        "gp": 1083,
+        "pr": 6.002,
+        "user_id": 161245615915925504
     },
     {
-        "ID": "Zulock",
-        "EP": 8643,
-        "GP": 2354,
-        "PR": 3.672,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "zulock#5210",
-        "author_id": 234505611805458434
+        "name": "Zulock",
+        "ep": 7346,
+        "gp": 2000,
+        "pr": 3.673,
+        "user_id": 234505611805458434
     },
     {
-        "ID": "Naicha",
-        "EP": 8856,
-        "GP": 2259,
-        "PR": 3.92,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "Naicha#9540",
-        "author_id": 530840344120524811
+        "name": "Naicha",
+        "ep": 7697,
+        "gp": 1920,
+        "pr": 4.009,
+        "user_id": 530840344120524811
     },
     {
-        "ID": "Scorpiob",
-        "EP": 3665,
-        "GP": 1491,
-        "PR": 2.458,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "scorpio#0698",
-        "author_id": 275480376909103114
+        "name": "Scorpiob",
+        "ep": 3200,
+        "gp": 1267,
+        "pr": 2.526,
+        "user_id": 275480376909103114
     },
     {
-        "ID": "Lowkeyrunner",
-        "EP": 8819,
-        "GP": 1955,
-        "PR": 4.511,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "LowKeyRunner#8197",
-        "author_id": 402301503534006273
+        "name": "Lowkeyrunner",
+        "ep": 7666,
+        "gp": 1661,
+        "pr": 4.615,
+        "user_id": 402301503534006273
     },
     {
-        "ID": "Akitainu",
-        "EP": 8658,
-        "GP": 3072,
-        "PR": 2.818,
-        "in_raid": true,
-        "stand_by": false,
-        "author": "Angulardart/Ditt#8629",
-        "author_id": 723015651932897312
+        "name": "Akitainu",
+        "ep": 7529,
+        "gp": 2611,
+        "pr": 2.884,
+        "user_id": 723015651932897312
     },
     {
-        "ID": "Quanshaman",
-        "EP": 8764,
-        "GP": 4489,
-        "PR": 1.952,
-        "in_raid": true,
-        "stand_by": false,
-        "author": "Quan#7915",
-        "author_id": 485605314272690197
+        "name": "Quanshaman",
+        "ep": 7619,
+        "gp": 3815,
+        "pr": 1.997,
+        "user_id": 485605314272690197
     },
     {
-        "ID": "Yoohoho",
-        "EP": 6216,
-        "GP": 1263,
-        "PR": 4.922,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "Yohoho#4416",
-        "author_id": 601222496615923727
+        "name": "Yoohoho",
+        "ep": 5368,
+        "gp": 1073,
+        "pr": 5.003,
+        "user_id": 601222496615923727
     },
     {
-        "ID": "Thewindrises",
-        "EP": 8659,
-        "GP": 3568,
-        "PR": 2.427,
-        "in_raid": true,
-        "stand_by": false,
-        "author": "FTHP#5061",
-        "author_id": 170396115584286720
+        "name": "Thewindrises",
+        "ep": 7530,
+        "gp": 3032,
+        "pr": 2.484,
+        "user_id": 170396115584286720
     },
     {
-        "ID": "Queldorei",
-        "EP": 8384,
-        "GP": 4038,
-        "PR": 2.076,
-        "in_raid": true,
-        "stand_by": false,
-        "author": "ericchen#5442",
-        "author_id": 178773532212199424
+        "name": "Queldorei",
+        "ep": 7296,
+        "gp": 3432,
+        "pr": 2.126,
+        "user_id": 178773532212199424
     },
     {
-        "ID": "Miotea",
-        "EP": 7897,
-        "GP": 2219,
-        "PR": 3.559,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "xxxx#3203",
-        "author_id": 388608813676101633
+        "name": "Miotea",
+        "ep": 6797,
+        "gp": 1886,
+        "pr": 3.604,
+        "user_id": 388608813676101633
     },
     {
-        "ID": "Airbkb",
-        "EP": 8734,
-        "GP": 3530,
-        "PR": 2.474,
-        "in_raid": true,
-        "stand_by": false,
-        "author": "Airbkb/Bigblackbang#0025",
-        "author_id": 621891956183924763
+        "name": "Airbkb",
+        "ep": 7593,
+        "gp": 3000,
+        "pr": 2.531,
+        "user_id": 621891956183924763
     },
     {
-        "ID": "Doublefly",
-        "EP": 8141,
-        "GP": 6473,
-        "PR": 1.258,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "Doublefly/Tickelly#7263",
-        "author_id": 538825238809673738
+        "name": "Doublefly",
+        "ep": 7089,
+        "gp": 5502,
+        "pr": 1.288,
+        "user_id": 538825238809673738
     },
     {
-        "ID": "Drfface",
-        "EP": 7996,
-        "GP": 3790,
-        "PR": 2.11,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "Anmiel#5309",
-        "author_id": 717200820579598437
+        "name": "Drfface",
+        "ep": 6966,
+        "gp": 3221,
+        "pr": 2.163,
+        "user_id": 717200820579598437
     },
     {
-        "ID": "Bandaidu",
-        "EP": 4387,
-        "GP": 3687,
-        "PR": 1.19,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "Chuansformer#4362",
-        "author_id": 851947444681834536
+        "name": "Bandaidu",
+        "ep": 3813,
+        "gp": 3133,
+        "pr": 1.217,
+        "user_id": 851947444681834536
     },
     {
-        "ID": "Piapia",
-        "EP": 7530,
-        "GP": 2663,
-        "PR": 2.828,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "Paopao\uff08Mataata)#8234",
-        "author_id": 675577893233098783
-	@@ -254,27 +254,27 @@
-        "EP": 2977,
-        "GP": 3028,
-        "PR": 0.983,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "SeaDragon#2032",
-        "author_id": 230134827846729728
+        "name": "Piapia",
+        "ep": 6570,
+        "gp": 2263,
+        "pr": 2.903,
+        "user_id": 675577893233098783
     },
     {
-        "ID": "Hardblack",
-        "EP": 8403,
-        "GP": 6805,
-        "PR": 1.235,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "Hardblack#6310",
-        "author_id": 351455787555618817
+        "name": "Epicshaman",
+        "ep": 2530,
+        "gp": 2573,
+        "pr": 0.983,
+        "user_id": 230134827846729728
     },
     {
-        "ID": "Windseeker",
-        "EP": 2827,
-        "GP": 1297,
-        "PR": 2.18,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "Windseeker#9672",
-        "author_id": 378976236254265344
-	@@ -301,32 +301,42 @@
+        "name": "Hardblack",
+        "ep": 7312,
+        "gp": 5784,
+        "pr": 1.264,
+        "user_id": 351455787555618817
     },
     {
-        "ID": "Dasaohuo",
-        "EP": 1620,
-        "GP": 2955,
-        "PR": 0.548,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "dasaohuo#6443",
-        "author_id": 339212600954847235
+        "name": "Windseeker",
+        "ep": 2572,
+        "gp": 1102,
+        "pr": 2.334,
+        "user_id": 378976236254265344
     },
     {
-        "ID": "Gglu",
-        "EP": 1450,
-        "GP": 1917,
-        "PR": 0.756,
-        "in_raid": true,
-        "stand_by": false,
-        "author": "Gglu#7730",
-        "author_id": 746603201775534120
+        "name": "Dirc",
+        "ep": 144,
+        "gp": 722,
+        "pr": 0.199,
+        "user_id": null
     },
     {
-        "ID": "Bubucowcow",
-        "EP": 1450,
-        "GP": 2832,
-        "PR": 0.512,
-        "in_raid": false,
-        "stand_by": false,
-        "author": "bubupig#0546",
-        "author_id": 498999671008788482
+        "name": "Kobesteak",
+        "ep": 144,
+        "gp": 722,
+        "pr": 0.199,
+        "user_id": null
     },
     {
-        "ID": "Udyin",
-        "EP": 800,
-        "GP": 1000,
-        "PR": 0.8,
-        "in_raid": true,
-        "stand_by": false,
-        "author": "None",
-        "author_id": 569714891582210068
+        "name": "Dasaohuo",
+        "ep": 1377,
+        "gp": 2511,
+        "pr": 0.548,
+        "user_id": 339212600954847235
+    },
+    {
+        "name": "Gglu",
+        "ep": 1232,
+        "gp": 1629,
+        "pr": 0.756,
+        "user_id": 746603201775534120
+    },
+    {
+        "name": "Bubucowcow",
+        "ep": 1232,
+        "gp": 2407,
+        "pr": 0.512,
+        "user_id": 498999671008788482
+    },
+    {
+        "name": "Udyin",
+        "ep": 680,
+        "gp": 850,
+        "pr": 0.8,
+        "user_id": 569714891582210068
     }
 ]

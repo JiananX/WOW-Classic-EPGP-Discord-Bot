@@ -1,67 +1,73 @@
 from raider import Raider
-from view.view import update_raider_view
+from view.view import update_raider_view, update_admin_view
 
 import cfg
 import constant
+import history
 import re
 import util
 
+
 async def add_new_member(message):
-    game_id_match = re.findall("-id ([^ ]+)", message.content, re.IGNORECASE)
+    raider_name_match = re.findall("-name ([^ ]+)", message.content,
+                                   re.IGNORECASE)
 
-    if (len(game_id_match) == 1):
-        game_id = game_id_match[0]
+    if (len(raider_name_match) == 1):
+        raider_name = raider_name_match[0]
 
-        if (cfg.raider_dict.get(game_id) != None):
-            await message.author.send('The game id is already existed')
-            return
+        if (cfg.raider_dict.get(raider_name) != None):
+            cfg.event_msg = 'The raider name is already existed'
+        else:
+            cfg.raider_dict.update({
+                raider_name:
+                Raider(raider_name, 0, constant.initial_gp, None)
+            })
 
-        cfg.raider_dict.update(
-            {game_id: Raider(game_id, 0, constant.initial_gp, False, False, None, None)})
-
-        await message.author.send(
-            'New game id has been added, user need to login')
+            cfg.event_msg = 'New raider name has been added, user need to login'
     else:
-        await message.author.send('No game id in the command')
+        cfg.event_msg = 'No raider name in the command'
+
+    await update_raider_view()
+    await update_admin_view()
+
 
 async def adjust(message):
-    game_id_match = re.findall("-id ([^ ]+)", message.content, re.IGNORECASE)
+    raider_name_match = re.findall("-name ([^ ]+)", message.content,
+                                   re.IGNORECASE)
 
-    if (len(game_id_match) == 1):
-        game_id = game_id_match[0]
+    if (len(raider_name_match) == 1):
+        raider_name = raider_name_match[0]
 
-        if (cfg.raider_dict.get(game_id) == None):
-            await message.author.send('Cannot find game id')
-            return
+        if (cfg.raider_dict.get(raider_name) == None):
+            cfg.event_msg = 'Cannot find raider name'
+        else:
+            ep_match = re.findall("-ep ([+-]?[0-9]+)", message.content,
+                                  re.IGNORECASE)
+            gp_match = re.findall("-gp ([+-]?[0-9]+)", message.content,
+                                  re.IGNORECASE)
+            ep = 0
+            gp = 0
+            if (len(ep_match) == 1):
+                ep = int(ep_match[0])
+            if (len(gp_match) == 1):
+                gp = int(gp_match[0])
 
-        ep_match = re.findall("-ep ([+-]?[0-9]+)", message.content,
-                              re.IGNORECASE)
-        gp_match = re.findall("-gp ([+-]?[0-9]+)", message.content,
-                              re.IGNORECASE)
-        ep = 0
-        gp = 0
-        if (len(ep_match) == 1):
-            ep = int(ep_match[0])
-        if (len(gp_match) == 1):
-            gp = int(gp_match[0])
+            ep_before = util.get_ep(raider_name)
+            gp_before = util.get_gp(raider_name)
+            util.set_ep(raider_name, ep_before + ep)
+            util.set_gp(raider_name, gp_before + gp)
 
-        ep_before = util.get_ep(game_id)
-        gp_before = util.get_gp(game_id)
-        util.set_ep(game_id, ep_before + ep)
-        util.set_gp(game_id, gp_before + gp)
+            reason = ''
+            reason_match = re.findall("-r ([^ ]+)", message.content,
+                                      re.IGNORECASE)
+            if (len(reason_match) == 1):
+                reason = reason_match[0]
 
-        adjust_message = '调整成功 ID: %s Before EP: %s, GP: %s, After EP: %s, GP: %s' % (
-            game_id, ep_before, gp_before, util.get_ep(game_id),
-            util.get_gp(game_id))
+            history.log_adjustment([raider_name], ep=ep, gp=gp)
 
-        reason_match = re.findall("-r ([^ ]+)", message.content, re.IGNORECASE)
-        if (len(reason_match) == 1):
-            adjust_message += ', 原因: %s' % (reason_match[0])
-
-        await message.author.send(adjust_message)
-
-        await update_raider_view()
-
-        util.log_msg(adjust_message)
+            cfg.event_msg = 'Adjust successfully'
     else:
-        await message.author.send('No game id in the command')
+        cfg.event_msg = 'No raider name in the command'
+
+    await update_raider_view()
+    await update_admin_view()

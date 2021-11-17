@@ -23,14 +23,14 @@ def boss_menu():
 def loot_menu(boss):
     loots = []
     for loot in cfg.loot_dict.values():
-        if (loot.BOSS == boss):
+        if (loot.boss == boss):
             loots.append(loot)
 
     options = []
     for loot in loots:
         options.append(
-            SelectOption(label='%s' % (loot.NAME),
+            SelectOption(label='%s' % (loot.name),
                          value=util.build_admin_path(constant.loot_id_path,
-                                                     loot.NAME)))
+                                                     loot.name)))
 
     return [Select(custom_id=constant.loot_menu_id, options=options)]
