@@ -6,7 +6,7 @@ edit_message_response_type = 7
 raid_channel = 849111061840003079
 loot_channel = 907482797579595806
 
-loot_announcement_duration = 10
+loot_announcement_duration = 30
 
 # reg for message command
 update_reg = "Update ([^ ]+)"
