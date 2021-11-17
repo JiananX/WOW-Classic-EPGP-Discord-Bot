@@ -35,31 +35,30 @@
           <a href="index.html">团员名单</a> -- <a href="loot.html">装备GP列表</a> -- <a href="history.html">查看EPGP历史</a>
         </h3>
         <br>
-        <p class="text-white">输入装备拼音首字母， 比如虚空梦魇输入xkmy, 支持模糊查询</p>
         <input class="form-control" id="filter" type="text" placeholder="Search..">
         <br>
         <table class="table-striped border-success text-light table-hover" id="loot-table">
           <tbody class="searchable">
             <thead>
               <tr>
-                <th data-field="ID" data-sortable="true" class="d-none">
+                <th data-field="name" data-sortable="true" class="d-none">
                   <span>
                     装备
                   </span>
                 </th>
-                <th data-field="NAME" data-sortable="true">
-                  <span>
-                    装备
-                  </span>
-                </th>
-                <th data-field="GP" data-sortable="true">
+                <th data-field="gp" data-sortable="true">
                   <span>
                     EP
                   </span>
                 </th>
-                <th data-field="BIS" data-sortable="true">
+                <th data-field="bis" data-sortable="true">
                   <span>
                     是否为BIS
+                  </span>
+                </th>
+                <th data-field="boss" data-sortable="true">
+                  <span>
+                    BOSS
                   </span>
                 </th>
               </tr>
