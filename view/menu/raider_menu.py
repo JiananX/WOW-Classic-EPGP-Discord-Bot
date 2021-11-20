@@ -63,3 +63,34 @@ def raider_menu():
                    options=options[splice_index:],
                    max_values=len(options[splice_index:]))
         ]
+
+
+def loot_raider_menu(loot_name):
+    main_spec_option = []
+    off_spec_option = []
+
+    for user_id in cfg.main_spec[loot_name]:
+        main_spec_option.append(
+            SelectOption(label='%s' % (util.find_raider_name(user_id)),
+                         value=util.find_raider_name(user_id)))
+
+    for user_id in cfg.off_spec[loot_name]:
+        off_spec_option.append(
+            SelectOption(label='%s' % (util.find_raider_name(user_id)),
+                         value=util.find_raider_name(user_id)))
+
+    menus = []
+
+    if (len(main_spec_option) != 0):
+        menus.append(
+            Select(placeholder='Main Spec',
+                   custom_id='distribute main %s' % (loot_name),
+                   options=main_spec_option))
+
+    if (len(off_spec_option) != 0):
+        menus.append(
+            Select(placeholder='Off Spec',
+                   custom_id='distribute off %s' % (loot_name),
+                   options=off_spec_option))
+
+    return menus

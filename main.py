@@ -130,10 +130,12 @@ async def on_button_click(interaction):
         if (user_id in cfg.main_spec or user_id in cfg.off_spec):
             return
 
-        if (custom_id == constant.loot_main_spec_id):
-            cfg.main_spec.append(user_id)
-        elif (custom_id == constant.loot_off_spec_id):
-            cfg.off_spec.append(interaction.user.id)
+        if (custom_id.startswith(constant.loot_main_spec_id)):
+            loot_name = custom_id.split(' ')[1]
+            cfg.main_spec[loot_name].append(interaction.user.id)
+        elif (custom_id.startswith(constant.loot_off_spec_id)):
+            loot_name = custom_id.split(' ')[1]
+            cfg.off_spec[loot_name].append(interaction.user.id)
 
         # TODO: Consider response with another response type other than edit message
         await interaction.respond(type=constant.edit_message_response_type)
@@ -147,9 +149,9 @@ async def on_button_click(interaction):
                     'announce_loot_to_raider'):
                 # Due to the task could start after the admin_path is cleared, so we wil need to pass the proper loot it
                 cfg.loot_msg = 'distributing %s' % (
-                    cfg.admin_path_values[constant.loot_menu_id][0])
+                    cfg.admin_path_values[constant.loot_menu_id])
                 asyncio.create_task(
-                    callback(cfg.admin_path_values[constant.loot_menu_id][0]))
+                    callback(cfg.admin_path_values[constant.loot_menu_id]))
             else:
                 callback()
 
@@ -167,19 +169,36 @@ async def on_select_option(interaction):
     if (len(interaction.values) == 0):
         return
 
-    path = None
-    valid_value = []
-    for value in interaction.values:
-        match = re.findall('-path ([^ ]+) -value ([^ ]+)', value)
-        valid_value.append(match[0][1])
-        path = match[0][0]
+    if (interaction.custom_id.startswith('distribute')):
+        info = interaction.custom_id.split(' ')
+        raider_name = interaction.values[0]
+        loot = cfg.loot_dict[info[2]]
+        if (info[1] == 'main'):
+            util.set_gp(raider_name, util.get_gp(raider_name) + loot.gp)
+            history.log_adjustment([raider_name], loot=loot, gp=loot.gp)
+        elif (info[1] == 'off'):
+            util.set_gp(raider_name, util.get_gp(raider_name) + int(loot.gp / 2))
+            history.log_adjustment([raider_name], loot=loot, gp=int(loot.gp / 2))
 
-    cfg.admin_path.append(path)
-    cfg.admin_path_values.update({interaction.custom_id: valid_value})
+        cfg.even_msg = 'Distribute %s successfully' % (loot.name)
+        await update_admin_view()
+        await update_raider_view()
 
-    await update_admin_view()
+        await interaction.respond(type=constant.edit_message_response_type)
+    else:
+        path = None
+        valid_value = []
+        for value in interaction.values:
+            match = re.findall('-path ([^ ]+) -value ([^ ]+)', value)
+            valid_value.append(match[0][1])
+            path = match[0][0]
 
-    await interaction.respond(type=constant.edit_message_response_type)
+        cfg.admin_path.append(path)
+        cfg.admin_path_values.update({interaction.custom_id: valid_value})
+
+        await update_admin_view()
+
+        await interaction.respond(type=constant.edit_message_response_type)
 
 
 bot.run(discord_token)

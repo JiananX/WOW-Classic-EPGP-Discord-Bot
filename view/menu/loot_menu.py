@@ -33,4 +33,4 @@ def loot_menu(boss):
                          value=util.build_admin_path(constant.loot_id_path,
                                                      loot.name)))
 
-    return [Select(custom_id=constant.loot_menu_id, options=options)]
+    return [Select(custom_id=constant.loot_menu_id, options=options, max_values=len(options))]

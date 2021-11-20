@@ -8,7 +8,7 @@ from view.button.loot_button import loot_button
 from view.menu.epgp_menu import adjust_menu, epgp_menu, percentage_menu
 from view.menu.loot_menu import boss_menu, loot_menu
 from view.menu.main_menu import main_menu
-from view.menu.raider_menu import raider_menu, raider_operation_menu
+from view.menu.raider_menu import raider_menu, raider_operation_menu, loot_raider_menu
 from view.menu.system_menu import system_menu
 from view.menu.menu import all_paths
 
@@ -24,22 +24,29 @@ async def send_initial_message():
     cfg.raider_msg = await cfg.raider_channel.send(embed=raider_embed_view())
 
 
-async def send_loot_message(loot):
-    await cfg.raider_channel.send(
-        embed=loot_embed_view(loot),
-        components=loot_button,
-        delete_after=constant.loot_announcement_duration)
+async def send_loot_message(loot_names):
+    for loot_name in loot_names:
+        await cfg.raider_channel.send(
+            embed=loot_embed_view(loot_name),
+            components=loot_button(loot_name),
+            delete_after=constant.loot_announcement_duration)
 
-    await cfg.admin_channel.send(
-        embed=loot_embed_view(loot),
-        components=loot_button,
-        delete_after=constant.loot_announcement_duration)
+        await cfg.admin_channel.send(
+            embed=loot_embed_view(loot_name),
+            components=loot_button(loot_name),
+            delete_after=constant.loot_announcement_duration)
 
 
-async def send_loot_result_message(loot, winner_user_id):
-    await cfg.raider_channel.send(
-        embed=loot_result_embed_view(loot, winner_user_id),
-        delete_after=constant.loot_announcement_duration)
+async def send_loot_result_message(loot_names):
+    for loot_name in loot_names:
+        await cfg.raider_channel.send(
+            embed=loot_result_embed_view(loot_name),
+            delete_after=constant.loot_announcement_duration)
+
+        menus = loot_raider_menu(loot_name)
+        if (len(menus) != 0):
+            await cfg.admin_channel.send(
+                embed=loot_result_embed_view(loot_name), components=menus, delete_after=300)
 
 
 async def update_admin_view():
