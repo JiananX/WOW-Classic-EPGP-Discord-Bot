@@ -9,7 +9,6 @@ from menu_callback.menu_callback import all_paths_callback
 
 from view.menu.menu import all_paths
 from view.view import send_initial_message, update_admin_view, update_raider_view
-import wcl.wcl
 from emojis import emojis
 
 import asyncio
