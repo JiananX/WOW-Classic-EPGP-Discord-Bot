@@ -3,7 +3,8 @@ import discord
 import util
 
 
-def loot_embed_view(loot):
+def loot_embed_view(loot_name):
+    loot = cfg.loot_dict[loot_name]
     embed = discord.Embed(title='Distributing', color=discord.Color.random())
     embed.set_thumbnail(
         url='http://img.yao51.com/jiankangtuku/boiiejodiz.jpeg')
@@ -17,27 +18,21 @@ def loot_embed_view(loot):
     return embed
 
 
-def loot_result_embed_view(loot, winner_user_id):
-    embed = discord.Embed(title=loot.name, color=discord.Color.random())
+def loot_result_embed_view(loot_name):
+    embed = discord.Embed(title=loot_name, color=discord.Color.random())
     embed.set_thumbnail(
         url='http://img.yao51.com/jiankangtuku/boiiejodiz.jpeg')
 
-    if (winner_user_id == None):
-        embed.add_field(name='Winner', value='Nobody', inline=False)
-    else:
-        embed.add_field(name='Winner',
-                        value=util.find_raider_name(winner_user_id),
+
+    if (len(cfg.main_spec[loot_name]) != 0):
+        embed.add_field(name='Main Spec',
+                        value=_build_loot_result_message(cfg.main_spec[loot_name]),
                         inline=False)
 
-        if (len(cfg.main_spec) != 0):
-            embed.add_field(name='Main Spec',
-                            value=_build_loot_result_message(cfg.main_spec),
-                            inline=False)
-
-        if (len(cfg.off_spec) != 0):
-            embed.add_field(name='Off Spec',
-                            value=_build_loot_result_message(cfg.off_spec),
-                            inline=False)
+    if (len(cfg.off_spec[loot_name]) != 0):
+        embed.add_field(name='Off Spec',
+                        value=_build_loot_result_message(cfg.off_spec[loot_name]),
+                        inline=False)
 
     return embed
 

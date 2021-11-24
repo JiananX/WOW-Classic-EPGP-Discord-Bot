@@ -1,17 +1,3 @@
-def find_latest_report(startTime):
-    return '''
-            {
-              reportData {
-                reports(userID: 1493123, limit: 1, startTime: %s) {
-                  data {
-                    startTime
-                    code
-                  }
-                }
-              }
-            }
-            ''' %(startTime)
-
 def basic_report_query(code):
     return '''
             {

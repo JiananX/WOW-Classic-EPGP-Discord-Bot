@@ -1,10 +1,8 @@
 from wcl.wcl_object import Fight, FightEvent
-from wcl.query import basic_report_query, event_query, death_query, find_latest_report
+from wcl.query import basic_report_query, event_query, death_query
 
-import math
 import json
 import requests
-import time
 
 # 28499: 大蓝
 # 41617: 毒蛇大蓝
@@ -16,8 +14,13 @@ import time
 # 17528: 强效怒气药水
 # 28495: 治疗药水
 # 28515: 铁盾药水
+# 16666：恶魔符文
+# 13241: 地精工兵炸药
+# 30486：超级神风炸药
+# 45051: 疯狂炼金药水
 tracking_spell_id = [
-    28499, 41617, 41618, 28508, 28507, 28714, 27869, 17528, 28495, 28515
+    28499, 41617, 41618, 28508, 28507, 28714, 27869, 17528, 28495, 28515,
+    16666, 13241, 30486, 45051
 ]
 
 token = None
@@ -48,10 +51,6 @@ def initilization():
 def query_basic_report(code):
     if (token == None):
         initilization()
-
-    # code = _send_gql_request(find_latest_report(round(time.time() * 1000)-604800000
-    # ))
-    #["data"]["reportData"]["reports"]["data"][0]['code']
 
     result = _send_gql_request(
         basic_report_query(code))["data"]["reportData"]["report"]
@@ -119,7 +118,9 @@ def send_out_res():
     for fight in report_fights.values():
         time_overlap = fight.end_time - fight.start_time
         res += '%s(%s分钟),' % (
-            fight.fight_name, round(time_overlap / 60000.0, 3), )
+            fight.fight_name,
+            round(time_overlap / 60000.0, 3),
+        )
 
     res += '\n'
     for player in report_players:
@@ -134,12 +135,11 @@ def send_out_res():
                 if (potion_usage.get(player) != None):
                     actual = potion_usage[player]
 
-                
                 if (player in report_deaths[fight.fight_name].keys()):
-                    res += '[%s]'%(actual)
+                    res += '[%s]' % (actual)
                 else:
-                  res += str(actual)
-                
+                    res += str(actual)
+
                 res += ' '
 
         res += '\n'
