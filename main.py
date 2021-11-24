@@ -9,7 +9,7 @@ from menu_callback.menu_callback import all_paths_callback
 
 from view.menu.menu import all_paths
 from view.view import send_initial_message, update_admin_view, update_raider_view
-
+import wcl.wcl
 from emojis import emojis
 
 import asyncio
@@ -177,14 +177,15 @@ async def on_select_option(interaction):
             util.set_gp(raider_name, util.get_gp(raider_name) + loot.gp)
             history.log_adjustment([raider_name], loot=loot, gp=loot.gp)
         elif (info[1] == 'off'):
-            util.set_gp(raider_name, util.get_gp(raider_name) + int(loot.gp / 2))
-            history.log_adjustment([raider_name], loot=loot, gp=int(loot.gp / 2))
+            util.set_gp(raider_name,
+                        util.get_gp(raider_name) + int(loot.gp / 2))
+            history.log_adjustment([raider_name],
+                                   loot=loot,
+                                   gp=int(loot.gp / 2))
 
         cfg.even_msg = 'Distribute %s successfully' % (loot.name)
-        await update_admin_view()
-        await update_raider_view()
 
-        await interaction.respond(type=constant.edit_message_response_type)
+        await update_raider_view()
     else:
         path = None
         valid_value = []
@@ -196,9 +197,8 @@ async def on_select_option(interaction):
         cfg.admin_path.append(path)
         cfg.admin_path_values.update({interaction.custom_id: valid_value})
 
-        await update_admin_view()
-
-        await interaction.respond(type=constant.edit_message_response_type)
+    await update_admin_view()
+    await interaction.respond(type=constant.edit_message_response_type)
 
 
 bot.run(discord_token)
