@@ -125,15 +125,14 @@ async def on_button_click(interaction):
         return
     elif (custom_id.startswith('loot')):
         user_id = interaction.user.id
+        loot_name = custom_id.split(' ')[1]
 
-        if (user_id in cfg.main_spec or user_id in cfg.off_spec):
+        if (user_id in cfg.main_spec[loot_name] or user_id in cfg.off_spec[loot_name]):
             return
 
-        if (custom_id.startswith(constant.loot_main_spec_id)):
-            loot_name = custom_id.split(' ')[1]
+        if (custom_id.startswith(constant.loot_main_spec_id)):  
             cfg.main_spec[loot_name].append(interaction.user.id)
         elif (custom_id.startswith(constant.loot_off_spec_id)):
-            loot_name = custom_id.split(' ')[1]
             cfg.off_spec[loot_name].append(interaction.user.id)
 
         # TODO: Consider response with another response type other than edit message
