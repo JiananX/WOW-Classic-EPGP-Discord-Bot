@@ -169,21 +169,25 @@ async def on_select_option(interaction):
 
     if (interaction.custom_id.startswith('distribute')):
         info = interaction.custom_id.split(' ')
-        raider_name = interaction.values[0]
+        raider_names = interaction.values
         loot = cfg.loot_dict[info[2]]
-        if (info[1] == 'main'):
-            util.set_gp(raider_name, util.get_gp(raider_name) + loot.gp)
-            history.log_adjustment([raider_name], loot=loot, gp=loot.gp)
-        elif (info[1] == 'off'):
-            util.set_gp(raider_name,
-                        util.get_gp(raider_name) + int(loot.gp / 2))
-            history.log_adjustment([raider_name],
-                                   loot=loot,
-                                   gp=int(loot.gp / 2))
+        
+        for raider_name in raider_names:
+          if (info[1] == 'main'):
+              util.set_gp(raider_name, util.get_gp(raider_name) + loot.gp)
+              history.log_adjustment([raider_name], loot=loot, gp=loot.gp)
+          elif (info[1] == 'off'):
+              util.set_gp(raider_name,
+                          util.get_gp(raider_name) + int(loot.gp / 2))
+              history.log_adjustment([raider_name],
+                                    loot=loot,
+                                    gp=int(loot.gp / 2))
 
         cfg.even_msg = 'Distribute %s successfully' % (loot.name)
 
         await update_raider_view()
+
+        await interaction.message.delete()
     else:
         path = None
         valid_value = []
@@ -197,6 +201,5 @@ async def on_select_option(interaction):
 
     await update_admin_view()
     await interaction.respond(type=constant.edit_message_response_type)
-
 
 bot.run(discord_token)

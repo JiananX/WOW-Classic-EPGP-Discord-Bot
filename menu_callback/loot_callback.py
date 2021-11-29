@@ -4,8 +4,6 @@ import asyncio
 import cfg
 import constant
 
-
-# TODO: Consider the cocurrent loot announcement situation, or consider support multi-loot announcement
 async def loot_announcement(loot_names):
     cfg.main_spec = {}
     cfg.off_spec = {}
@@ -19,4 +17,3 @@ async def loot_announcement(loot_names):
     await asyncio.sleep(constant.loot_announcement_duration)
 
     await send_loot_result_message(loot_names)
-

@@ -85,12 +85,14 @@ def loot_raider_menu(loot_name):
         menus.append(
             Select(placeholder='Main Spec',
                    custom_id='distribute main %s' % (loot_name),
-                   options=main_spec_option))
+                   options=main_spec_option,
+                   max_values=len(main_spec_option)))
 
     if (len(off_spec_option) != 0):
         menus.append(
             Select(placeholder='Off Spec',
                    custom_id='distribute off %s' % (loot_name),
-                   options=off_spec_option))
+                   options=off_spec_option,
+                   max_values=len(off_spec_option)))
 
     return menus
