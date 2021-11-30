@@ -6,6 +6,7 @@ import json
 import raider
 import loot
 
+
 # Outdated
 def sync_epgp_from_gsheet_to_json():
     epgp_from_gsheet = get_epgp_from_gsheet()
@@ -19,6 +20,7 @@ def sync_epgp_from_gsheet_to_json():
     jstr = json.dumps([ob.__dict__ for ob in raiders])
     with open('epgp.json', 'w') as outfile:
         outfile.write(jstr)
+
 
 # Outdated
 def sync_loot_from_gsheet_to_json():
@@ -40,7 +42,7 @@ def load_epgp_from_json_to_memory():
         json_data = infile.read()
     raiders = json.loads(json_data)
     for index, value in enumerate(raiders):
-        r = raider.Raider(raiders[index]['name'],raiders[index]['ep'],
+        r = raider.Raider(raiders[index]['name'], raiders[index]['ep'],
                           raiders[index]['gp'], raiders[index]['user_id'])
         cfg.raider_dict[raiders[index]['name']] = r
 
@@ -50,9 +52,8 @@ def load_loot_from_json_to_memory():
         json_data = infile.read()
     loots = json.loads(json_data)
     for index, value in enumerate(loots):
-        l = loot.Loot(loots[index]['name'],
-                      loots[index]['gp'], loots[index]['bis'],
-                      loots[index]['boss'])
+        l = loot.Loot(loots[index]['name'], loots[index]['gp'],
+                      loots[index]['bis'], loots[index]['boss'])
         cfg.loot_dict[loots[index]['name']] = l
 
 
