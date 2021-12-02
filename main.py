@@ -78,7 +78,7 @@ async def on_voice_state_update(member, before, after):
     before_channel = before.channel
 
     if (new_channel is not None and new_channel.id == constant.raid_channel):
-        print('%s joined server' % (member.name))
+        print('%s joined server %s' % (member.name, member.id))
 
         for raider in cfg.raider_dict.values():
             if raider.user_id == member.id:
