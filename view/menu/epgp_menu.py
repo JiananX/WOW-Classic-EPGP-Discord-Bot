@@ -61,7 +61,7 @@ epgp_menu = [
            ])
 ]
 percentage_menu = [
-    Select(custom_id=constant.percentage_menu,
+    Select(custom_id=constant.percentage_menu_id,
            options=[
                percentage_option(0.1),
                percentage_option(0.2),

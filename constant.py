@@ -26,7 +26,7 @@ system_menu_id = 'system_menu'
 raider_operation_menu_id = 'raider_operation_menu'
 raider_menu_id = 'raider_menu'
 epgp_menu_id = 'epgp_menu'
-percentage_menu = 'percentage_menu'
+percentage_menu_id = 'percentage_menu'
 boss_menu_id = 'boss_menu'
 loot_menu_id = 'loot_menu'
 

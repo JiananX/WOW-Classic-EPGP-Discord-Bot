@@ -32,7 +32,7 @@ def adjust_epgp():
         loot = cfg.loot_dict[cfg.admin_path_values[constant.loot_menu_id][0]]
         gp = loot.gp
 
-    if cfg.admin_path_values.get('percentage') is not None:
+    if cfg.admin_path_values.get(constant.percentage_menu_id) is not None:
         percentage = float(
             cfg.admin_path_values[constant.percentage_menu_id][0])
 
