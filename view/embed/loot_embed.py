@@ -41,8 +41,11 @@ def _build_loot_result_message(raider_user_ids):
     loot_result_message = '>>> '
     for user_id in raider_user_ids:
         raider_name = util.find_raider_name(user_id)
-        loot_result_message += '%s (EP: %s, PR: %s)\n' % (
-            raider_name, util.get_ep(raider_name),
-            util.calculate_pr(raider_name))
+        if raider_name is not None:
+            loot_result_message += '%s (EP: %s, PR: %s)\n' % (
+                raider_name, util.get_ep(raider_name),
+                util.calculate_pr(raider_name))
+        else:
+            print('\nCan\'t find WOW account with Discord user id ', user_id)
 
     return loot_result_message
