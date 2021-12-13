@@ -41,7 +41,7 @@ def adjust_epgp():
         util.set_gp(raider_name,
                     util.get_gp(raider_name) + int(gp * percentage))
 
-    history.log_adjustment(raider_names, ep=ep, gp=gp, loot=loot)
+    history.log_adjustment(raider_names, ep=ep, gp=int(gp * percentage), loot=loot)
 
     cfg.event_msg = 'Adjust successfully'
 
