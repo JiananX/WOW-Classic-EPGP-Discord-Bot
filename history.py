@@ -24,6 +24,7 @@ def log_adjustment(raider_names, ep=0, gp=0, loot=None):
         adjustment_msg += '获得%sGP ' % (gp)
 
     _log_msg(adjustment_msg)
+    print(adjustment_msg)
 
 
 def _log_msg(msg):
