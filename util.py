@@ -24,14 +24,10 @@ def calculate_pr(raider_name):
 
 def find_raider_name(user_id):
     for raider in cfg.raider_dict.values():
-        if (raider.user_id == user_id and raider.user_id != None):
+        if (user_id in raider.user_id):
             return raider.name
 
     return None
-
-
-def build_admin_path(path, value):
-    return '-path %s -value %s' % (path, value)
 
 
 def is_match(reg, content):

@@ -4,13 +4,21 @@ import asyncio
 import cfg
 import constant
 
+
 async def loot_announcement(loot_names):
+    if (cfg.is_distributing):
+        return
+
     cfg.main_spec = {}
     cfg.off_spec = {}
+    cfg.minor_improve = {}
+    cfg.gbid = {}
 
     for loot_name in loot_names:
-      cfg.main_spec.update({loot_name: []})
-      cfg.off_spec.update({loot_name: []})
+        cfg.main_spec.update({loot_name: []})
+        cfg.off_spec.update({loot_name: []})
+        cfg.minor_improve.update({loot_name: []})
+        cfg.gbid.update({loot_name: []})
 
     await send_loot_message(loot_names)
 

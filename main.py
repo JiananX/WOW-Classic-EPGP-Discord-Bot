@@ -1,15 +1,18 @@
 from discord_components import ComponentsBot
 
-from command.admin_command import add_new_member, adjust
-from command.raider_command import update_user_id
+from command.admin_command import decay, adjust
+from command.raider_command import update_user_id, check_pr, reset_spec
 
 from infra.source import load_loot_from_json_to_memory, load_epgp_from_json_to_memory
 
-from menu_callback.menu_callback import all_paths_callback
-
-from view.menu.menu import all_paths
+from view.menu.loot_menu import boss_menu, loot_menu
 from view.view import send_initial_message, update_admin_view, update_raider_view
+
+from menu_callback.loot_callback import loot_announcement
+
 from emojis import emojis
+
+from infra.source import dump_epgp_from_memory_to_json
 
 import asyncio
 import cfg
@@ -34,10 +37,7 @@ cfg.raider_dict = {}
 cfg.loot_dict = {}
 cfg.emojis_dict = {}
 
-cfg.admin_path = []
-cfg.admin_path_values = {}
-
-cfg.event_msg = 'No event yet'
+cfg.is_distributing = False
 
 
 @bot.event
@@ -49,9 +49,9 @@ async def on_ready():
     cfg.admin_channel = await bot.fetch_user(admin_user_id)
 
     raid_voice_channel = await bot.fetch_channel(constant.raid_channel)
-    for member_id in raid_voice_channel.voice_states.keys():
+    for user_id in raid_voice_channel.voice_states.keys():
         for name, raider in cfg.raider_dict.items():
-            if raider.user_id == member_id:
+            if user_id in raider.user_id:
                 raider.in_raid = True
 
     async for message in cfg.raider_channel.history():
@@ -81,9 +81,8 @@ async def on_voice_state_update(member, before, after):
         print('%s joined server %s' % (member.name, member.id))
 
         for raider in cfg.raider_dict.values():
-            if raider.user_id == member.id:
+            if member.id in raider.user_id:
                 raider.in_raid = True
-                await update_admin_view()
                 await update_raider_view()
                 break
     elif ((new_channel is None or new_channel.id != constant.raid_channel)
@@ -92,9 +91,8 @@ async def on_voice_state_update(member, before, after):
         print('%s left server' % (member.name))
 
         for raider in cfg.raider_dict.values():
-            if raider.user_id == member.id:
+            if member.id in raider.user_id:
                 raider.in_raid = False
-                await update_admin_view()
                 await update_raider_view()
                 break
 
@@ -107,8 +105,14 @@ async def on_message(message):
     if (message.author == bot.user):
         return
 
-    if (util.is_match(constant.add_new_member_reg, message.content)):
-        await add_new_member(message)
+    if (util.is_match(constant.spec_reg, message.content)):
+        await reset_spec(message)
+
+    if (util.is_match(constant.pr_reg, message.content)):
+        await check_pr(message)
+
+    if (util.is_match(constant.decay_reg, message.content)):
+        await decay(message)
 
     if (util.is_match(constant.adjust_reg, message.content)):
         await adjust(message)
@@ -116,50 +120,64 @@ async def on_message(message):
     if (util.is_match(constant.update_reg, message.content)):
         await update_user_id(message)
 
+    if (util.is_match(constant.write_reg, message.content)):
+        dump_epgp_from_memory_to_json()
+        await message.channel.send('写入成功', delete_after=constant.delte_after)
+
 
 @bot.event
 async def on_button_click(interaction):
     custom_id = interaction.custom_id
 
     if (custom_id == None):
+        await interaction.respond(type=constant.edit_message_response_type)
         return
     elif (custom_id.startswith('loot')):
         user_id = interaction.user.id
         loot_name = custom_id.split(' ')[1]
 
-        if (user_id in cfg.main_spec[loot_name] or user_id in cfg.off_spec[loot_name]):
+        if (util.find_raider_name(user_id) == None):
+            # TODO: Consider response with another response type other than edit message, also with real message
+            await interaction.respond(type=constant.edit_message_response_type)
             return
 
-        if (custom_id.startswith(constant.loot_main_spec_id)):  
+        if (user_id in cfg.main_spec[loot_name]
+                or user_id in cfg.off_spec[loot_name]
+                or user_id in cfg.minor_improve[loot_name]
+                or user_id in cfg.gbid[loot_name]):
+            await interaction.respond(type=constant.edit_message_response_type)
+            return
+
+        if (custom_id.startswith(constant.loot_main_spec_id)):
             cfg.main_spec[loot_name].append(interaction.user.id)
         elif (custom_id.startswith(constant.loot_off_spec_id)):
             cfg.off_spec[loot_name].append(interaction.user.id)
+        elif (custom_id.startswith(constant.loot_minor_improve_id)):
+            cfg.minor_improve[loot_name].append(interaction.user.id)
+        elif (custom_id.startswith(constant.loot_gbid_id)):
+            cfg.gbid[loot_name].append(interaction.user.id)
 
-        # TODO: Consider response with another response type other than edit message
         await interaction.respond(type=constant.edit_message_response_type)
     elif (custom_id.startswith('admin')):
-        if ('confirm' in custom_id):
-            callback = all_paths_callback[all_paths.index(cfg.admin_path)]
-            # Invoke the proper callback for the given menu path
-            # 1) Loot distribution is an async operation
-            # 2) Other are sync operation
-            if (cfg.admin_path_values[constant.main_menu_id][0] ==
-                    'announce_loot_to_raider'):
-                # Due to the task could start after the admin_path is cleared, so we wil need to pass the proper loot it
-                cfg.loot_msg = 'distributing %s' % (
-                    cfg.admin_path_values[constant.loot_menu_id])
-                asyncio.create_task(
-                    callback(cfg.admin_path_values[constant.loot_menu_id]))
-            else:
-                callback()
+        if (util.is_match(custom_id, constant.admin_cancel_id)):
+            cfg.next_menu = boss_menu()
+            await update_admin_view()
 
-        cfg.admin_path = []
-        cfg.admin_path_values = {}
+        if (util.is_match(custom_id, constant.admin_reward_200_id)):
+            for raider in cfg.raider_dict.values():
+                if (raider.in_raid == True):
+                    util.set_ep(raider.name, raider.ep + 200)
+            await update_raider_view()
+            history.log_msg('All Raider 200EP');
 
-        await update_admin_view()
-        await update_raider_view()
+        if (util.is_match(custom_id, constant.admin_reward_250_id)):
+            for raider in cfg.raider_dict.values():
+                if (raider.in_raid == True):
+                    util.set_ep(raider.name, raider.ep + 250)
+            await update_raider_view()
+            history.log_msg('All Raider 250EP');
 
-        await interaction.respond(type=constant.edit_message_response_type)
+    await interaction.respond(type=constant.edit_message_response_type)
 
 
 @bot.event
@@ -167,39 +185,38 @@ async def on_select_option(interaction):
     if (len(interaction.values) == 0):
         return
 
-    if (interaction.custom_id.startswith('distribute')):
-        info = interaction.custom_id.split(' ')
-        raider_names = interaction.values
-        loot = cfg.loot_dict[info[2]]
-        
-        for raider_name in raider_names:
-          if (info[1] == 'main'):
-              util.set_gp(raider_name, util.get_gp(raider_name) + loot.gp)
-              history.log_adjustment([raider_name], loot=loot, gp=loot.gp)
-          elif (info[1] == 'off'):
-              util.set_gp(raider_name,
-                          util.get_gp(raider_name) + int(loot.gp / 2))
-              history.log_adjustment([raider_name],
-                                    loot=loot,
-                                    gp=int(loot.gp / 2))
+    if (interaction.custom_id == constant.boss_menu_id):
+        cfg.next_menu = loot_menu(interaction.values[0])
+        await update_admin_view()
+        await interaction.respond(type=constant.edit_message_response_type)
+    elif (interaction.custom_id == constant.loot_menu_id):
+        cfg.next_menu = boss_menu()
+        asyncio.create_task(loot_announcement(interaction.values))
+        await update_admin_view()
+        await interaction.respond(type=constant.edit_message_response_type)
+    elif (interaction.custom_id.startswith('distribute')):
+        # TODO: consider extract this part to common util and prevent the interaction happen twice
+        # the custom id should in format of 'distribute -loot %s -percentage %s'
+        # Support multi raiders distribute
+        raider_name = interaction.values[0]
+        loot_name = re.findall("-loot ([^ ]+)", interaction.custom_id,
+                               re.IGNORECASE)[0]
+        percentage = int(
+            re.findall("-percentage ([0-9]+)", interaction.custom_id,
+                       re.IGNORECASE)[0]) / 100
+        util.set_gp(
+            raider_name, cfg.raider_dict[raider_name].gp +
+            int(cfg.loot_dict[loot_name].gp * percentage))
 
-        cfg.even_msg = 'Distribute %s successfully' % (loot.name)
+        await interaction.respond(type=constant.edit_message_response_type)
+        await interaction.message.delete()
+
+        history.log_adjustment([raider_name],
+                                     loot=cfg.loot_dict[loot_name],
+                                     gp=int(cfg.loot_dict[loot_name].gp *
+                                            percentage))
 
         await update_raider_view()
 
-        await interaction.message.delete()
-    else:
-        path = None
-        valid_value = []
-        for value in interaction.values:
-            match = re.findall('-path ([^ ]+) -value ([^ ]+)', value)
-            valid_value.append(match[0][1])
-            path = match[0][0]
-
-        cfg.admin_path.append(path)
-        cfg.admin_path_values.update({interaction.custom_id: valid_value})
-
-    await update_admin_view()
-    await interaction.respond(type=constant.edit_message_response_type)
 
 bot.run(discord_token)

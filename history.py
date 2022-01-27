@@ -26,6 +26,9 @@ def log_adjustment(raider_names, ep=0, gp=0, loot=None):
     _log_msg(adjustment_msg)
     print(adjustment_msg)
 
+def log_msg(msg):
+    _log_msg(msg)
+
 
 def _log_msg(msg):
     logger = logging.getLogger('EPGP')

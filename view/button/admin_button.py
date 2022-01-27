@@ -3,17 +3,17 @@ from discord_components import ActionRow, Button, ButtonStyle
 import constant
 
 admin_cancel_button = [
-    Button(label='Cancel',
+    Button(label='返回主菜单',
            custom_id=constant.admin_cancel_id,
            style=ButtonStyle.blue)
 ]
 
-admin_confirm_button = [
-    Button(label='Confirm',
-           custom_id=constant.admin_confirm_id,
-           style=ButtonStyle.blue)
-]
-
-admin_bundle_button = [
-    ActionRow(admin_confirm_button[0], admin_cancel_button[0])
+admin_reward_buttons = [
+    ActionRow(
+        Button(label='200GP',
+               custom_id=constant.admin_reward_200_id,
+               style=ButtonStyle.red),
+        Button(label='250GP',
+               custom_id=constant.admin_reward_250_id,
+               style=ButtonStyle.red))
 ]
