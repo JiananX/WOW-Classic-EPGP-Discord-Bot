@@ -1,6 +1,7 @@
 from view.view import update_raider_view
 
 import cfg
+import constant
 import history
 import re
 import util
@@ -14,7 +15,7 @@ async def adjust(message):
         raider_name = raider_name_match[0]
 
         if (cfg.raider_dict.get(raider_name) == None):
-            await message.channel.send('无法找到游戏名称')
+            await message.channel.send('无法找到游戏名称', delete_after=constant.delte_after)
         else:
             ep_match = re.findall("-ep ([+-]?[0-9]+)", message.content,
                                   re.IGNORECASE)
@@ -39,9 +40,9 @@ async def adjust(message):
                 reason = reason_match[0]
 
             history.log_adjustment([raider_name], ep=ep, gp=gp)
-            await message.channel.send('调整成功')
+            await message.channel.send('调整成功', delete_after=constant.delte_after)
     else:
-        await message.channel.send('无法找到游戏名称')
+        await message.channel.send('无法找到游戏名称', delete_after=constant.delte_after)
 
     await update_raider_view()
 
@@ -54,4 +55,4 @@ async def decay(message):
         gp_before = util.get_gp(raider_name)
         util.set_ep(raider_name, int(ep_before * factor))
         util.set_gp(raider_name, int(gp_before * factor))
-    await message.channel.send('Decay成功')
+    await message.channel.send('Decay成功', delete_after=constant.delte_after)

@@ -105,7 +105,6 @@ async def on_message(message):
     if (message.author == bot.user):
         return
 
-    # TODO: 自动删除replied message
     if (util.is_match(constant.spec_reg, message.content)):
         await reset_spec(message)
 
@@ -169,12 +168,14 @@ async def on_button_click(interaction):
                 if (raider.in_raid == True):
                     util.set_ep(raider.name, raider.ep + 200)
             await update_raider_view()
+            history.log_msg('All Raider 200EP');
 
         if (util.is_match(custom_id, constant.admin_reward_250_id)):
             for raider in cfg.raider_dict.values():
                 if (raider.in_raid == True):
                     util.set_ep(raider.name, raider.ep + 250)
             await update_raider_view()
+            history.log_msg('All Raider 250EP');
 
     await interaction.respond(type=constant.edit_message_response_type)
 
@@ -196,6 +197,7 @@ async def on_select_option(interaction):
     elif (interaction.custom_id.startswith('distribute')):
         # TODO: consider extract this part to common util and prevent the interaction happen twice
         # the custom id should in format of 'distribute -loot %s -percentage %s'
+        # Support multi raiders distribute
         raider_name = interaction.values[0]
         loot_name = re.findall("-loot ([^ ]+)", interaction.custom_id,
                                re.IGNORECASE)[0]
@@ -208,6 +210,11 @@ async def on_select_option(interaction):
 
         await interaction.respond(type=constant.edit_message_response_type)
         await interaction.message.delete()
+
+        history.log_adjustment([raider_name],
+                                     loot=cfg.loot_dict[loot_name],
+                                     gp=int(cfg.loot_dict[loot_name].gp *
+                                            percentage))
 
         await update_raider_view()
 
