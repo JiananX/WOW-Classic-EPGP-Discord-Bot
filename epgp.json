@@ -308,5 +308,79 @@
         "pr": 1.5,
         "user_id": [],
         "spec": 61
+    },
+    {
+        "name": "Spoondz",
+        "ep": 1500,
+        "gp": 1000,
+        "pr": 1.5,
+        "user_id": [],
+        "spec": 72
+    },
+    {
+        "name": "ronaldoluis",
+        "ep": 2300,
+        "gp": 1000,
+        "pr": 2.3,
+        "user_id": [
+            191418734517157889
+        ],
+        "spec": 99
+    },
+    {
+        "name": "Wspirit",
+        "ep": 2300,
+        "gp": 1000,
+        "pr": 2.3,
+        "user_id": [
+            226943933823975425
+        ],
+        "spec": 99
+    },
+    {
+        "name": "Bloodmagus",
+        "ep": 2300,
+        "gp": 1000,
+        "pr": 2.3,
+        "user_id": [
+            616096504788287511
+        ],
+        "spec": 99
+    },
+    {
+        "name": "Queldorei",
+        "ep": 1500,
+        "gp": 1000,
+        "pr": 1.5,
+        "user_id": [],
+        "spec": 99
+    },
+    {
+        "name": "Unstoppaple",
+        "ep": 1500,
+        "gp": 1000,
+        "pr": 1.5,
+        "user_id": [],
+        "spec": 99
+    },
+    {
+        "name": "MortalZelda",
+        "ep": 2300,
+        "gp": 1000,
+        "pr": 2.3,
+        "user_id": [
+            346849607533330432
+        ],
+        "spec": 99
+    },
+    {
+        "name": "deleva",
+        "ep": 2300,
+        "gp": 1000,
+        "pr": 2.3,
+        "user_id": [
+            874552388575440936
+        ],
+        "spec": 99
     }
 ]
