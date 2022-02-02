@@ -1,7 +1,7 @@
 from infra.gsheet import get_epgp_from_gsheet, get_loot_from_gsheet
 
 import cfg
-import deprecation
+#import deprecation
 import pandas as pd
 import json
 import raider
@@ -46,7 +46,7 @@ def dump_epgp_from_memory_to_json():
         outfile.write(jstr)
 
 
-@deprecation.deprecated()
+#@deprecation.deprecated()
 def sync_epgp_from_gsheet_to_json():
     epgp_from_gsheet = get_epgp_from_gsheet()
     df = pd.DataFrame.from_dict(epgp_from_gsheet)
@@ -61,7 +61,7 @@ def sync_epgp_from_gsheet_to_json():
         outfile.write(jstr)
 
 
-@deprecation.deprecated()
+#@deprecation.deprecated()
 def sync_loot_from_gsheet_to_json():
     loot_from_gsheet = get_loot_from_gsheet()
     df = pd.DataFrame.from_dict(loot_from_gsheet)
@@ -80,7 +80,7 @@ def sync_loot_from_gsheet_to_json():
         outfile.write(jstr)
 
 
-@deprecation.deprecated()
+#@deprecation.deprecated()
 def dump_loot_from_memory_to_json():
     loots = []
     for value in cfg.loot_dict.values():
