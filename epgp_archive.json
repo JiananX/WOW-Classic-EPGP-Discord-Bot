@@ -10,6 +10,32 @@
         "spec": 71
     },
     {
+        "name": "Miotea",
+        "ep": 4329,
+        "gp": 1116,
+        "pr": 3.879,
+        "user_id": [
+            388608813676101633
+        ],
+        "spec": 41
+    },
+    {
+        "name": "Imatrix",
+        "ep": 2940,
+        "gp": 2067,
+        "pr": 1.422,
+        "user_id": [],
+        "spec": 61
+    },
+    {
+        "name": "Youlannatiee",
+        "ep": 2940,
+        "gp": 1000,
+        "pr": 2.94,
+        "user_id": [],
+        "spec": 82
+    },
+    {
         "name": "Ramblerson",
         "ep": 1795,
         "gp": 989,
