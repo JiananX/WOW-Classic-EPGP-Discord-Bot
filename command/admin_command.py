@@ -56,3 +56,4 @@ async def decay(message):
         util.set_ep(raider_name, int(ep_before * factor))
         util.set_gp(raider_name, int(gp_before * factor))
     await message.channel.send('Decay成功', delete_after=constant.delte_after)
+    history.log_msg('Decay ' + str(factor));
