@@ -20,6 +20,8 @@ write_reg = 'w'
 
 # button custom id
 admin_cancel_id = 'admin_cancel_id'
+admin_reward_20_id = 'admin_reward_20_id'
+admin_reward_150_id = 'admin_reward_150_id'
 admin_reward_200_id = 'admin_reward_200_id'
 admin_reward_250_id = 'admin_reward_250_id'
 loot_main_spec_id = "loot_main_spec"

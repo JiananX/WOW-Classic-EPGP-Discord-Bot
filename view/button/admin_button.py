@@ -10,6 +10,12 @@ admin_cancel_button = [
 
 admin_reward_buttons = [
     ActionRow(
+        Button(label='20GP',
+               custom_id=constant.admin_reward_20_id,
+               style=ButtonStyle.red),
+        Button(label='150GP',
+               custom_id=constant.admin_reward_150_id,
+               style=ButtonStyle.red),
         Button(label='200GP',
                custom_id=constant.admin_reward_200_id,
                style=ButtonStyle.red),
