@@ -163,6 +163,20 @@ async def on_button_click(interaction):
             cfg.next_menu = boss_menu()
             await update_admin_view()
 
+        if (util.is_match(custom_id, constant.admin_reward_20_id)):
+            for raider in cfg.raider_dict.values():
+                if (raider.in_raid == True):
+                    util.set_ep(raider.name, raider.ep + 20)
+            await update_raider_view()
+            history.log_msg('All Raider 20EP');
+
+        if (util.is_match(custom_id, constant.admin_reward_150_id)):
+            for raider in cfg.raider_dict.values():
+                if (raider.in_raid == True):
+                    util.set_ep(raider.name, raider.ep + 150)
+            await update_raider_view()
+            history.log_msg('All Raider 150EP');
+
         if (util.is_match(custom_id, constant.admin_reward_200_id)):
             for raider in cfg.raider_dict.values():
                 if (raider.in_raid == True):
