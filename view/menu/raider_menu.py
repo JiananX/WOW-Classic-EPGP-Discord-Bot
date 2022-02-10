@@ -16,10 +16,10 @@ def loot_raider_menu(loot_name):
         menus.append(
             _try_to_create_menu(cfg.off_spec[loot_name], '副天赋', loot_name, 20))
 
-    if (len(cfg.minor_improve[loot_name]) != 0):
-        menus.append(
-            _try_to_create_menu(cfg.minor_improve[loot_name], '小提升', loot_name,
-                                20))
+    # if (len(cfg.minor_improve[loot_name]) != 0):
+    #     menus.append(
+    #         _try_to_create_menu(cfg.minor_improve[loot_name], '小提升', loot_name,
+    #                             20))
 
     if (len(cfg.gbid[loot_name]) != 0):
         menus.append(

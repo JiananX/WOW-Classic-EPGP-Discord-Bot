@@ -10,6 +10,24 @@
         "spec": 71
     },
     {
+        "name": "Kirkray",
+        "ep": 2878,
+        "gp": 3265,
+        "pr": 0.881,
+        "user_id": [
+            906376289810784306
+        ],
+        "spec": 22
+    },
+    {
+        "name": "Unstoppaple",
+        "ep": 3315,
+        "gp": 850,
+        "pr": 3.9,
+        "user_id": [],
+        "spec": 53
+    },
+    {
         "name": "Miotea",
         "ep": 4329,
         "gp": 1116,

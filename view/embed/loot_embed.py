@@ -31,11 +31,11 @@ def loot_result_embed_view(loot_name):
                             cfg.off_spec[loot_name]),
                         inline=False)
 
-    if (len(cfg.minor_improve[loot_name]) != 0):
-        embed.add_field(name='小提升',
-                        value=_build_loot_result_message(
-                            cfg.minor_improve[loot_name]),
-                        inline=False)
+    # if (len(cfg.minor_improve[loot_name]) != 0):
+    #     embed.add_field(name='小提升',
+    #                     value=_build_loot_result_message(
+    #                         cfg.minor_improve[loot_name]),
+    #                     inline=False)
 
     if (len(cfg.gbid[loot_name]) != 0):
         embed.add_field(name='拍金',
