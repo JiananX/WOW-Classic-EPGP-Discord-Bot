@@ -1,6 +1,7 @@
 import cfg
 import discord
 import util
+import constant
 
 
 def loot_embed_view(loot_name):
@@ -11,7 +12,11 @@ def loot_embed_view(loot_name):
     embed.add_field(name='GP', value='> %s' % (loot.gp), inline=False)
 
     if (len(loot.bis) != 0):
-        embed.add_field(name='BIS天赋', value='> %s' % (loot.bis), inline=False)
+        bis_str = ''
+        for bis in loot.bis:
+            bis_str += constant.specs.get(bis) + ' | '
+            
+        embed.add_field(name='BIS天赋', value='以下天赋只能出分不能出g \n> %s' % (bis_str), inline=False)
 
     return embed
 
