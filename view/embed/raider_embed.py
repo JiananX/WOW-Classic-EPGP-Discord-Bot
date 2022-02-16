@@ -17,10 +17,12 @@ def raider_embed_view():
                             reverse=True)
 
     raiders_on_pr = ''
+    count = 1
     for entry in sorted_pr_list:
         raider = entry[0]
-        raiders_on_pr += raider.name + '\t' + str((raider.ep/raider.gp).__round__(2)) + '\n'
-
+        raiders_on_pr += str(count) + '. ' + raider.name + '\t' + str((raider.ep/raider.gp).__round__(2)) + '\n'
+        count = count + 1
+    
     if (len(raiders_on_pr) != 0):
         embed.add_field(name='__*活动团员名单(根据PR排序)*__',
                         value='>>> %s' % raiders_on_pr)
