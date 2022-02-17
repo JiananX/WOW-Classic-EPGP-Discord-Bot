@@ -226,9 +226,8 @@ async def on_select_option(interaction):
         await interaction.message.delete()
 
         history.log_adjustment([raider_name],
-                                     loot=cfg.loot_dict[loot_name],
-                                     gp=int(cfg.loot_dict[loot_name].gp *
-                                            percentage))
+                               loot=cfg.loot_dict[loot_name],
+                               gp=int(cfg.loot_dict[loot_name].gp * percentage), percentage=percentage)
 
         await update_raider_view()
 

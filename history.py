@@ -12,10 +12,10 @@ def start_logger():
     logger.setLevel(level=logging.INFO)
 
 
-def log_adjustment(raider_names, ep=0, gp=0, loot=None):
+def log_adjustment(raider_names, ep=0, gp=0, loot=None, percentage=1):
     adjustment_msg = '%s ' % (raider_names)
     if (loot != None):
-        adjustment_msg += '获得物品%s ' % (loot.name)
+        adjustment_msg += '%s%%GP获得物品%s ' % (int(percentage*100), loot.name)
 
     if (ep != 0):
         adjustment_msg += '获得%sEP ' % (ep)
