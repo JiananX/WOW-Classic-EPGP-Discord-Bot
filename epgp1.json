@@ -1,0 +1,250 @@
+[
+    {
+        "name": "Hunterbear",
+        "ep": 11594,
+        "gp": 15484,
+        "pr": 0.749,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Wspriest",
+        "ep": 10944,
+        "gp": 12855,
+        "pr": 0.851,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Ishotokill",
+        "ep": 8393,
+        "gp": 14835,
+        "pr": 0.566,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Ronaldoluis",
+        "ep": 11244,
+        "gp": 6218,
+        "pr": 1.808,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Udyin",
+        "ep": 7687,
+        "gp": 8507,
+        "pr": 0.904,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Spoondz",
+        "ep": 7728,
+        "gp": 12707,
+        "pr": 0.608,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Pandafree",
+        "ep": 10670,
+        "gp": 11515,
+        "pr": 0.927,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Bansheegd",
+        "ep": 12087,
+        "gp": 13130,
+        "pr": 0.921,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Lowkeyrunner",
+        "ep": 12177,
+        "gp": 35739,
+        "pr": 0.341,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Nons",
+        "ep": 12165,
+        "gp": 16562,
+        "pr": 0.735,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Dagugu",
+        "ep": 5195,
+        "gp": 7027,
+        "pr": 0.739,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Bloodmagus",
+        "ep": 10898,
+        "gp": 601,
+        "pr": 18.133,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Norva",
+        "ep": 8998,
+        "gp": 4228,
+        "pr": 2.128,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Airbkb",
+        "ep": 2452,
+        "gp": 1655,
+        "pr": 1.482,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Doubleverify",
+        "ep": 10323,
+        "gp": 14882,
+        "pr": 0.694,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Mihoyo",
+        "ep": 10042,
+        "gp": 5678,
+        "pr": 1.769,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Deleva",
+        "ep": 8023,
+        "gp": 8555,
+        "pr": 0.938,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Spoond",
+        "ep": 7264,
+        "gp": 5100,
+        "pr": 1.424,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Eaturtofu",
+        "ep": 1995,
+        "gp": 3857,
+        "pr": 0.517,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Burninglove",
+        "ep": 11766,
+        "gp": 4551,
+        "pr": 2.585,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Valdmire",
+        "ep": 5550,
+        "gp": 850,
+        "pr": 6.529,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Threesomer",
+        "ep": 3496,
+        "gp": 2434,
+        "pr": 1.436,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Bubusasa",
+        "ep": 6570,
+        "gp": 11292,
+        "pr": 0.582,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Akitainu",
+        "ep": 12167,
+        "gp": 9197,
+        "pr": 1.323,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Yuuluve",
+        "ep": 6570,
+        "gp": 7308,
+        "pr": 0.899,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Milkbig",
+        "ep": 8443,
+        "gp": 5727,
+        "pr": 1.474,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Thewindrises",
+        "ep": 12163,
+        "gp": 11643,
+        "pr": 1.045,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Everchild",
+        "ep": 11983,
+        "gp": 15827,
+        "pr": 0.757,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Springg",
+        "ep": 10492,
+        "gp": 15719,
+        "pr": 0.667,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Mortalzelda",
+        "ep": 10629,
+        "gp": 7890,
+        "pr": 1.347,
+        "user_id": 1,
+        "spec": 1
+    },
+    {
+        "name": "Merlinni",
+        "ep": 6570,
+        "gp": 850,
+        "pr": 7.729,
+        "user_id": 1,
+        "spec": 1
+    }
+]

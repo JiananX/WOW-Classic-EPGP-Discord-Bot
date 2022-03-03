@@ -42,7 +42,7 @@ def dump_epgp_from_memory_to_json():
         'spec': ob.spec
     } for ob in raiders],
                       indent=4)
-    with open('epgp.json', 'w') as outfile:
+    with open('epgp1.json', 'w') as outfile:
         outfile.write(jstr)
 
 

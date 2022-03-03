@@ -23,6 +23,8 @@ import json
 import re
 import util
 
+import raider
+
 bot = ComponentsBot('?')
 history.start_logger()
 
@@ -67,6 +69,28 @@ async def on_ready():
     await send_initial_message()
 
     print('CF Senior EPGP start')
+
+    # lua_result = ''
+    # for name, raider in cfg.raider_dict.items():
+    #   lua_result += name + "= {"
+    #   lua_result += "[\"ep\"] = " + str(raider.ep) + ","
+    #   lua_result += "[\"gp\"] = " + str(raider.gp) + ","
+    #   lua_result += "[\"spec\"] = " + str(raider.spec) + "},"
+
+    # loot_result = ''
+
+    # for name, loot in cfg.loot_dict.items():
+    #   loot_result += "[\"" + name + "\"] = {"
+    #   loot_result += "[\"gp\"] = " + str(loot.gp) + ","
+    #   if(len(loot.bis) == 0):
+    #     loot_result += "[\"bis\"] = {},},"
+    #   else:
+    #     loot_result += "[\"bis\"] = {"
+    #     for single_bis in loot.bis:
+    #       loot_result += str(single_bis) + ","
+    #     loot_result += "}, },"
+
+    # print(lua_result)
 
 
 @bot.event
@@ -168,28 +192,28 @@ async def on_button_click(interaction):
                 if (raider.in_raid == True):
                     util.set_ep(raider.name, raider.ep + 20)
             await update_raider_view()
-            history.log_msg('All Raider 20EP');
+            history.log_msg('All Raider 20EP')
 
         if (util.is_match(custom_id, constant.admin_reward_150_id)):
             for raider in cfg.raider_dict.values():
                 if (raider.in_raid == True):
                     util.set_ep(raider.name, raider.ep + 150)
             await update_raider_view()
-            history.log_msg('All Raider 150EP');
+            history.log_msg('All Raider 150EP')
 
         if (util.is_match(custom_id, constant.admin_reward_200_id)):
             for raider in cfg.raider_dict.values():
                 if (raider.in_raid == True):
                     util.set_ep(raider.name, raider.ep + 200)
             await update_raider_view()
-            history.log_msg('All Raider 200EP');
+            history.log_msg('All Raider 200EP')
 
         if (util.is_match(custom_id, constant.admin_reward_250_id)):
             for raider in cfg.raider_dict.values():
                 if (raider.in_raid == True):
                     util.set_ep(raider.name, raider.ep + 250)
             await update_raider_view()
-            history.log_msg('All Raider 250EP');
+            history.log_msg('All Raider 250EP')
 
     await interaction.respond(type=constant.edit_message_response_type)
 
@@ -227,9 +251,25 @@ async def on_select_option(interaction):
 
         history.log_adjustment([raider_name],
                                loot=cfg.loot_dict[loot_name],
-                               gp=int(cfg.loot_dict[loot_name].gp * percentage), percentage=percentage)
+                               gp=int(cfg.loot_dict[loot_name].gp *
+                                      percentage),
+                               percentage=percentage)
 
         await update_raider_view()
 
 
-bot.run(discord_token)
+#bot.run(discord_token)
+result = '{[Hunterbear][11594][15484]}{[Wspriest][10944][12855]}{[Ishotokill][8393][14835]}{[Ronaldoluis][11244][6218]}{[Udyin][7687][8507]}{[Spoondz][7728][12707]}{[Pandafree][10670][11515]}{[Bansheegd][12087][13130]}{[Lowkeyrunner][12177][35739]}{[Nons][12165][16562]}{[Dagugu][5195][7027]}{[Bloodmagus][10898][601]}{[Norva][8998][4228]}{[Airbkb][2452][1655]}{[Doubleverify][10323][14882]}{[Mihoyo][10042][5678]}{[Deleva][8023][8555]}{[Spoond][7264][5100]}{[Eaturtofu][1995][3857]}{[Burninglove][11766][4551]}{[Valdmire][5550][850]}{[Threesomer][3496][2434]}{[Bubusasa][6570][11292]}{[Akitainu][12167][9197]}{[Yuuluve][6570][7308]}{[Milkbig][8443][5727]}{[Thewindrises][12163][11643]}{[Everchild][11983][15827]}{[Springg][10492][15719]}{[Mortalzelda][10629][7890]}{[Merlinni][6570][850]}'
+all_chars = re.findall("(\{\[[A-Z]+\]\[[0-9]+\]\[[0-9]+\]\})", result, re.IGNORECASE)
+
+for char in all_chars:
+  name_match = re.findall("\[[A-Z]+\]", char, re.IGNORECASE)[0]
+  name = name_match[1:len(name_match) - 1]
+
+  scores_match = re.findall("(\[[0-9]+\])", char, re.IGNORECASE)
+  ep = int(scores_match[0][1:len(scores_match[0]) - 1])
+  gp = int(scores_match[1][1:len(scores_match[1]) - 1])
+
+  cfg.raider_dict[name] = raider.Raider(name, ep, gp, 1, 1)
+
+dump_epgp_from_memory_to_json()
